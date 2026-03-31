@@ -1,56 +1,44 @@
-name: Deploy main_bbe
+name: Deploy to Prod
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+
+concurrency:
+  group: prod-deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup SSH
-        shell: bash
-        run: |
-          set -e
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          printf '%s' '${{ secrets.SERVER_SSH_KEY }}' > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-
-      - name: Deploy to server
-        shell: bash
-        run: |
-          set -e
-
-          HOST="${{ secrets.SERVER_HOST }}"
-          USER="${{ secrets.SERVER_USER }}"
-          PORT="${{ secrets.SERVER_PORT }}"
-
-          if [ -z "$HOST" ]; then
-            echo "SERVER_HOST is missing"
-            exit 1
-          fi
-
-          if [ -z "$USER" ]; then
-            echo "SERVER_USER is missing"
-            exit 1
-          fi
-
-          if [ -z "$PORT" ]; then
-            PORT=22
-          fi
-
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 -p "$PORT" "$USER@$HOST" "
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
             set -e
             cd /var/www/main_bbe
-            git pull origin main
-            . .venv/bin/activate
-            pip install -r requirements.txt
+
+            git config --global --add safe.directory /var/www/main_bbe || true
+
+            git fetch origin
+            git reset --hard origin/main
+
+            if [ ! -x /var/www/main_bbe/.venv/bin/python ]; then
+              python3 -m venv /var/www/main_bbe/.venv
+            fi
+
+            /var/www/main_bbe/.venv/bin/python -m pip install --upgrade pip setuptools wheel
+
+            if [ -f /var/www/main_bbe/requirements.txt ]; then
+              /var/www/main_bbe/.venv/bin/python -m pip install -r /var/www/main_bbe/requirements.txt
+            fi
+
             sudo systemctl restart main_bbe
             sudo systemctl reload nginx
-          "
+
+            echo "✅ deployed $(git rev-parse --short HEAD)"
