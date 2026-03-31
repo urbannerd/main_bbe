@@ -1,30 +1,44 @@
-name: PR Check
+name: Deploy to Prod
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
+    branches: ["main"]
+
+concurrency:
+  group: prod-deploy
+  cancel-in-progress: true
 
 jobs:
-  validate:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          python-version: "3.11"
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/impulse
 
-      - name: Install dependencies
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install -r requirements.txt
+            git config --global --add safe.directory /opt/impulse || true
 
-      - name: Basic import check
-        run: |
-          source .venv/bin/activate
-          python -c "import app.main; print('app imports ok')"
+            git fetch origin
+            git reset --hard origin/main
+
+            # Ensure venv exists (self-heal)
+            if [ ! -x /opt/impulse/.venv/bin/python ]; then
+              python3 -m venv /opt/impulse/.venv
+            fi
+
+            /opt/impulse/.venv/bin/python -m pip install --upgrade pip setuptools wheel
+
+            if [ -f /opt/impulse/requirements.txt ]; then
+              /opt/impulse/.venv/bin/python -m pip install -r /opt/impulse/requirements.txt
+            fi
+
+            sudo systemctl restart impulse-api.service
+            sudo systemctl reload nginx
+
+            echo "✅ deployed $(git rev-parse --short HEAD)"
