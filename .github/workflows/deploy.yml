@@ -14,20 +14,31 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup SSH
+        shell: bash
         run: |
+          set -e
+
           mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh
+
+          printf "%s" "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+
           PORT="${{ secrets.SERVER_PORT }}"
           if [ -z "$PORT" ]; then PORT=22; fi
+
           ssh-keyscan -p "$PORT" -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy to server
+        shell: bash
         run: |
+          set -e
+
           PORT="${{ secrets.SERVER_PORT }}"
           if [ -z "$PORT" ]; then PORT=22; fi
 
-          ssh -p "$PORT" ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -p "$PORT" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << 'EOF'
             set -e
             cd /var/www/main_bbe
             git pull origin main
