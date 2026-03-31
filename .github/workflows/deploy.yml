@@ -17,33 +17,40 @@ jobs:
         shell: bash
         run: |
           set -e
-
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-
-          printf "%s" "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s' '${{ secrets.SERVER_SSH_KEY }}' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-
-          PORT="${{ secrets.SERVER_PORT }}"
-          if [ -z "$PORT" ]; then PORT=22; fi
-
-          ssh-keyscan -p "$PORT" -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy to server
         shell: bash
         run: |
           set -e
 
+          HOST="${{ secrets.SERVER_HOST }}"
+          USER="${{ secrets.SERVER_USER }}"
           PORT="${{ secrets.SERVER_PORT }}"
-          if [ -z "$PORT" ]; then PORT=22; fi
 
-          ssh -i ~/.ssh/id_ed25519 -p "$PORT" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << 'EOF'
+          if [ -z "$HOST" ]; then
+            echo "SERVER_HOST is missing"
+            exit 1
+          fi
+
+          if [ -z "$USER" ]; then
+            echo "SERVER_USER is missing"
+            exit 1
+          fi
+
+          if [ -z "$PORT" ]; then
+            PORT=22
+          fi
+
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 -p "$PORT" "$USER@$HOST" "
             set -e
             cd /var/www/main_bbe
             git pull origin main
-            source .venv/bin/activate
+            . .venv/bin/activate
             pip install -r requirements.txt
             sudo systemctl restart main_bbe
             sudo systemctl reload nginx
-          EOF
+          "
