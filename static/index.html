@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bag Builders Exchange — Live Options Scanners & Market Charts</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <meta name="description" content="Bag Builders Exchange streams option scanners and live market charts in real time. Free access. Educational purposes only." />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="wrap">
+      <div class="nav-inner">
+        <a class="brand" href="#">
+          <img src="assets/logo.png" class="logo-img" alt="Bag Builders Exchange Logo" />
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#modules">Dashboards</a>
+          <a href="#features">What we do</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        
+        <div class="nav-cta">
+          <a class="btn ghost" href="#modules">Explore</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="pill"><span class="dot" aria-hidden="true"></span> Live market tools • <b style="color:var(--gold2);font-weight:800">Free</b> right now</div>
+
+          <h1 class="h1">
+            Real-Time <span class="accent">Options Scanners</span> & Market Charts—Built For Fast Reads.
+          </h1>
+
+          <p class="sub">
+            Bag Builders Exchange gives traders live chart views for <b>SPY</b> and <b>QQQ</b>,
+            plus three focused scanners: <b>Impulse</b>, <b>Leap</b>, and <b>Swing</b>.
+            Built to surface opportunity fast with a clean, readable interface.
+            Educational purposes only—no financial advice.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#features">See what’s inside</a>
+          </div>
+
+          <div class="meta">
+            <span>Market hours: <b>Mon–Fri 9:30 AM – 4:00 PM ET</b></span>
+            <span>Product: <b>Free access</b> (for now)</span>
+            <span>Focus: <b>clean signal, less noise</b></span>
+          </div>
+        </div>
+
+        <!-- Preview panel -->
+        <aside class="card hero-right" aria-label="Live preview mock">
+          <div class="panel-title">
+            <h3>Live preview</h3>
+            <div class="mini">
+              <span class="chip">FREE</span>
+              <span>streaming during market hours</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="mini-card">
+              <h4>SPY <span class="tag">Live Chart</span></h4>
+              <div class="val" id="spy-live-title">Real-Time Chart</div>
+              <p class="desc" id="spy-live-desc">
+                Quick market context so you can track trend, structure, and reaction.
+              </p>
+              <div class="spark" id="spy-live-spark" aria-hidden="true"></div>
+            </div>
+          
+            <div class="mini-card">
+              <h4>Impulse <span class="tag">Scanner</span></h4>
+              <div class="val" id="impulse-live-title">Volatility Movers</div>
+              <p class="desc" id="impulse-live-desc">
+                Find the loud names when the tape gets active.
+              </p>
+              <div class="spark" id="impulse-live-spark" aria-hidden="true"></div>
+            </div>
+          </div>
+          
+          <div class="list" role="table" aria-label="Impulse scanner snapshot">
+            <div class="list-head">
+              <span>Impulse Scanner</span>
+              <span id="impulse-list-status" style="color:var(--muted2);text-transform:none;letter-spacing:0">
+                loading...
+              </span>
+            </div>
+          
+            <div class="list-row" role="row">
+              <div role="cell" id="impulse-row-1-symbol"></div>
+              <div class="chg" role="cell" id="impulse-row-1-change"></div>
+              <div class="tag" role="cell" id="impulse-row-1-tag"></div>
+            </div>
+          
+            <div class="list-row" role="row">
+              <div role="cell" id="impulse-row-2-symbol"></div>
+              <div class="chg" role="cell" id="impulse-row-2-change"></div>
+              <div class="tag" role="cell" id="impulse-row-2-tag"></div>
+            </div>
+          
+            <div class="list-row" role="row">
+              <div role="cell" id="impulse-row-3-symbol"></div>
+              <div class="chg" role="cell" id="impulse-row-3-change"></div>
+              <div class="tag" role="cell" id="impulse-row-3-tag"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <!-- MODULES -->
+  <section id="modules">
+    <div class="wrap">
+      <div class="section-title">
+        <div>
+          <div class="kicker"><span class="bar" aria-hidden="true"></span> Products</div>
+          <h2>Live chart views and scanners built for fast decision-making</h2>
+        </div>
+        <p>Your core tools—simple, focused, and built for traders who want fast context.</p>
+      </div>
+  
+      <div class="grid4">
+        <div class="module">
+          <h3>QQQ & SPY Live Chart</h3>
+          <p>Track the S&amp;P 500 ETF with a dedicated live chart view built for intraday context.</p>
+          <div class="mini-actions">
+            <a class="btn primary" href="https://live.bagbuildersexchange.com/spy/">Open SPY</a>
+            <a class="btn primary" href="https://live.bagbuildersexchange.com/qqq/">Open QQQ</a>
+          </div>
+        </div>
+  
+        <div class="module">
+          <h3>Impulse Scanner</h3>
+          <p>Find the top volatile names moving right now when the tape starts expanding.</p>
+          <div class="mini-actions">
+            <a class="btn primary" href="https://live.bagbuildersexchange.com/qqq/">Open Impulse</a>
+          </div>
+        </div>
+  
+        <div class="module">
+          <h3>Leap Scanner</h3>
+          <p>Surface bigger developing moves and names showing stronger expansion potential.</p>
+          <div class="mini-actions">
+            <a class="btn primary" href="https://bagbuildersexchange.com/impulse/">Open Leap</a>
+          </div>
+        </div>
+  
+        <div class="module">
+          <h3>Swing Scanner</h3>
+          <p>Identify cleaner multi-day setups for traders looking beyond pure intraday action.</p>
+          <div class="mini-actions">
+            <a class="btn primary" href="https://bagbuildersexchange.com/leap/">Open Swing</a>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-title">
+        <div>
+          <div class="kicker"><span class="bar" aria-hidden="true"></span> What we do</div>
+          <h2>We help traders read the market faster</h2>
+        </div>
+        <p>Bag Builders Exchange is built to reduce noise and surface useful context quickly.</p>
+      </div>
+  
+      <div class="grid3">
+        <div class="feature">
+          <h4>Dedicated SPY &amp; QQQ live chart views</h4>
+          <p>Watch two of the most important market products with focused, easy-to-read chart layouts.</p>
+        </div>
+        <div class="feature">
+          <h4>Three scanner workflows</h4>
+          <p>Use Impulse, Leap, and Swing scanners to find fast movers, expanding names, and broader setups.</p>
+        </div>
+        <div class="feature">
+          <h4>Built for speed and clarity</h4>
+          <p>Large typography, minimal friction, and a clean layout that keeps attention on price action.</p>
+        </div>
+      </div>
+  
+      <div style="height:14px"></div>
+  
+      <div class="grid3">
+        <div class="feature">
+          <h4>Focused product design</h4>
+          <p>Each page has a job: chart view or scanner. No unnecessary clutter.</p>
+        </div>
+        <div class="feature">
+          <h4>Free right now</h4>
+          <p>The product is currently free while we continue refining and expanding the platform.</p>
+        </div>
+        <div class="feature">
+          <h4>Education-first platform</h4>
+          <p>We provide tools and information—not brokerage access or trading advice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-title">
+        <div>
+          <div class="kicker"><span class="bar" aria-hidden="true"></span> How it works</div>
+          <h2>Choose the tool that matches your style</h2>
+        </div>
+        <p>Use chart views for market context and scanners for opportunity discovery.</p>
+      </div>
+  
+      <div class="grid3">
+        <div class="feature">
+          <h4>1) Start with SPY or QQQ</h4>
+          <p>Use the live chart views to understand broad market direction and structure.</p>
+        </div>
+        <div class="feature">
+          <h4>2) Open a scanner</h4>
+          <p>Use Impulse for fast movers, Leap for expanding setups, and Swing for broader trade ideas.</p>
+        </div>
+        <div class="feature">
+          <h4>3) Stay focused</h4>
+          <p>Move between chart context and scanner results without wasting time across too many tabs.</p>
+        </div>
+      </div>
+  
+      <div style="height:16px"></div>
+  
+      <div class="card" style="padding:16px;border-radius:22px">
+        <div class="section-title" style="margin:0 0 10px">
+          <h2 style="margin:0;font-size:18px">Ready to try it?</h2>
+          <p style="margin:0">It’s free—jump in during market hours.</p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn primary" href="https://live.bagbuildersexchange.com/qqq/">View QQQ Live Chart</a>
+          <a class="btn secondary" href="https://live.bagbuildersexchange.com/spy/">View SPY Live Chart</a>
+        </div>
+        <p style="margin:12px 0 0;color:var(--muted2);font-size:12px;line-height:1.4">
+          Educational purposes only. Not financial advice. No brokerage or trade execution.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-title">
+        <div>
+          <div class="kicker"><span class="bar" aria-hidden="true"></span> FAQ</div>
+          <h2>Quick answers</h2>
+        </div>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>
+            Is Bag Builders Exchange a broker?
+            <span class="tag">No</span>
+          </summary>
+          <p>No. We don’t execute trades or connect to brokerage accounts. We provide informational dashboards and scanners.</p>
+        </details>
+
+        <details>
+          <summary>
+            Is it really free?
+            <span class="tag">Yes (currently)</span>
+          </summary>
+          <p>Yes—access is free while we build. If pricing changes later, you’ll see it clearly on the site.</p>
+        </details>
+
+        <details>
+          <summary>
+            When does the data update?
+            <span class="tag">Market hours</span>
+          </summary>
+          <p>Dashboards are intended for regular U.S. market hours (Mon–Fri, 9:30 AM–4:00 PM ET).</p>
+        </details>
+
+        <details>
+          <summary>
+            Is this financial advice?
+            <span class="tag">No</span>
+          </summary>
+          <p>No. Educational purposes only. Always do your own research and use proper risk management.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <div>
+          <div class="brand" style="margin-bottom:8px">
+            <div>Bag Builders <span>Exchange</span></div>
+          </div>
+          <div style="max-width:70ch;line-height:1.45">
+          Educational purposes only—no financial advice.
+          </div>
+          <div style="margin-top:8px;color:var(--muted2);font-size:12px">
+            © <span id="y"></span> Bag Builders Exchange • Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-start">
+          <a href="/docs">Docs</a>
+          <a href="/support">Support</a>
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/disclaimer">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    window.BBE_CONFIG = {
+      refreshMs: 10000,
+      endpoints: {
+        homePreview: "/api/home-preview",
+        impulseSnapshot: "/api/impulse-snapshot"
+      }
+    };
+  </script>
+  <script src="js/bbe_main.js"></script>
+</body>
+</html>
