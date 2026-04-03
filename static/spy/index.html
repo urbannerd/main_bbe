@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bag Builders Exchange – SPY Charts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html, body {
+  margin: 0;
+  background: black;
+  height: 100%;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+/* VIDEO */
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: black;
+}
+
+/* MARKET CLOSED SCREEN */
+.market-closed {
+  position: absolute;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #ccc;
+  background: black;
+}
+
+.market-closed h1 {
+  color: #cd9a09;
+  margin-bottom: 8px;
+}
+
+.market-closed p {
+  font-size: 14px;
+}
+
+.countdown {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* TOP BAR */
+.top-bar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* BADGES */
+.badge {
+  background: rgba(0,0,0,0.65);
+  color: #cd9a09;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.live {
+  background: rgba(205,154,9,0.9);
+  color: black;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* DISCLAIMER */
+.disclaimer {
+  background: rgba(0,0,0,0.65);
+  color: #ccc;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  max-width: 420px;
+}
+
+/* DONATE */
+.bottom-bar {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+}
+
+.donate {
+  pointer-events: auto;
+  background: #cd9a09;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.donate:hover {
+  background: #e6b11a;
+}
+</style>
+</head>
+
+<body data-stream="spy">
+
+<video
+  id="player"
+  muted
+  playsinline
+  webkit-playsinline
+  controls
+  preload="metadata">
+  <source src="/hls/spy.m3u8" type="application/vnd.apple.mpegurl">
+</video>
+
+<!-- MARKET CLOSED -->
+<div class="market-closed" id="closed">
+  <div>
+    <h1>Market Closed</h1>
+    <p>
+      Live trading is available<br>
+      Monday – Friday<br>
+      9:30 AM – 4:00 PM ET
+    </p>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay">
+  <div class="top-bar">
+    <div class="badge">SPY</div>
+    <div class="live" id="liveBadge">LIVE</div>
+
+    <!-- VIEWER COUNT (ADMIN ONLY) -->
+    <div id="viewerCount" class="badge" style="display:none;">
+      <span id="viewerNumber">0</span>
+    </div>
+
+    <div class="disclaimer">
+      Educational purposes only. Not financial advice.
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <a class="donate"
+       href="https://buymeacoffee.com/bagbuildersexchange"
+       target="_blank"
+       rel="noopener">
+      Support the Stream
+    </a>
+  </div>
+</div>
+
+<script src="/js/market.js" defer></script>
+<script src="/js/viewer-admin.js" defer></script>
+<script src="/js/autoplay.js" defer></script>
+<script type="module" src="/js/viewer-heartbeat.js"></script>  
+</body>
+
+</html>
