@@ -20,25 +20,29 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
             set -e
-            cd /opt/impulse
 
-            git config --global --add safe.directory /opt/impulse || true
+            APP_DIR=/var/www/main_bbe
+            SERVICE_NAME=impulse-api.service
+
+            cd "$APP_DIR"
+
+            git config --global --add safe.directory "$APP_DIR" || true
 
             git fetch origin
             git reset --hard origin/main
 
             # Ensure venv exists (self-heal)
-            if [ ! -x /opt/impulse/.venv/bin/python ]; then
-              python3 -m venv /opt/impulse/.venv
+            if [ ! -x "$APP_DIR/.venv/bin/python" ]; then
+              python3 -m venv "$APP_DIR/.venv"
             fi
 
-            /opt/impulse/.venv/bin/python -m pip install --upgrade pip setuptools wheel
+            "$APP_DIR/.venv/bin/python" -m pip install --upgrade pip setuptools wheel
 
-            if [ -f /opt/impulse/requirements.txt ]; then
-              /opt/impulse/.venv/bin/python -m pip install -r /opt/impulse/requirements.txt
+            if [ -f "$APP_DIR/requirements.txt" ]; then
+              "$APP_DIR/.venv/bin/python" -m pip install -r "$APP_DIR/requirements.txt"
             fi
 
-            sudo systemctl restart impulse-api.service
+            sudo systemctl restart "$SERVICE_NAME"
             sudo systemctl reload nginx
 
             echo "✅ deployed $(git rev-parse --short HEAD)"
