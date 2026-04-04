@@ -1,0 +1,249 @@
+html, body {
+    margin: 0;
+    background: black;
+    height: 100%;
+    overflow: hidden;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--text);
+  }
+  
+  /* VIDEO */
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: black;
+  }
+  
+  /* ================= MARKET CLOSED FULLSCREEN OVERLAY ================= */
+
+.market-closed{
+    position: fixed;
+    top: 90px;          /* push overlay below navbar */
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 90px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.96);
+    z-index: 50;        /* below navbar (navbar is 100) */
+  }
+  
+  /* overlay text styling */
+  .market-closed h1 {
+    color: #cd9a09;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
+  .market-closed p {
+    font-size: 14px;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .closed-topbar{
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 22px;
+    background: rgba(0,0,0,0.55);
+    border-bottom: none;
+  }
+  
+  .closed-brand{
+    color: #cd9a09;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  
+  .closed-tagline{
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+  }
+
+  
+  /* TOP BAR */
+  .top-bar {
+    position: absolute;
+    top: 110px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* BADGES */
+  .badge {
+    background: rgba(0,0,0,0.65);
+    color: #cd9a09;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .live {
+    background: rgba(205,154,9,0.9);
+    color: black;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+  
+  /* DISCLAIMER */
+  .disclaimer {
+    background: rgba(0,0,0,0.65);
+    color: #ccc;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    max-width: 420px;
+  }
+  
+  /* DONATE */
+  .bottom-bar {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+  }
+  
+  .donate {
+    pointer-events: auto;
+    background: #cd9a09;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  
+  .donate:hover {
+    background: #e6b11a;
+  }
+
+/* page container */
+.page{
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 22px 26px;
+  }
+  
+  .site-nav{
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(7,7,8,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  
+  .site-nav-wrap {
+    width: 100%;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+  
+  .site-brand{
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+  
+  .site-logo-img{
+    height: 75px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(255,200,60,.35));
+  }
+  
+  .site-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: auto;
+  }
+  
+  .site-nav-links a{
+    color: rgba(232,232,234,.82);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 12px;
+    transition: background .15s ease, color .15s ease;
+  }
+  
+  .site-nav-links a:hover{
+    background: rgba(255,255,255,.05);
+    color: #fff;
+  }
+  
+  .site-nav-cta{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+  
+  .site-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 650;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,.10);
+    color: #e8e8ea;
+    white-space: nowrap;
+  }
+  
+  .site-btn-ghost{
+    background: transparent;
+  }
+  
+  .site-btn:hover{
+    background: rgba(255,255,255,.05);
+  }
+  
+  @media (max-width: 980px){
+    .site-nav-wrap{
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  
+    .site-nav-links{
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .site-logo-img{
+      height: 42px;
+    }
+  }
+  
+  /* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 900px){
+    .topbar{ padding: 18px 14px 10px; }
+    .page{ padding: 0 14px 20px; }
+    .title{ font-size: 32px; }
+    .search{ width: 220px; }
+  }

@@ -15,12 +15,29 @@ app.include_router(preview_router, prefix="/api")
 
 app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
 app.mount("/js", StaticFiles(directory="static/js"), name="js")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
 def landing_page():
     return FileResponse("static/index.html")
 
+
+@app.get("/qqq/")
+def qqq_page():
+    return FileResponse("static/qqq/index.html")
+
+@app.get("/qqq")
+def qqq_page_no_slash():
+    return FileResponse("static/qqq/index.html")
+
+@app.get("/spy/")
+def qqq_page():
+    return FileResponse("static/spy/index.html")
+
+@app.get("/spy")
+def qqq_page_no_slash():
+    return FileResponse("static/spy/index.html")
 
 @app.get("/docs")
 def docs_page():
