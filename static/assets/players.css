@@ -67,16 +67,19 @@ html, body {
     font-size: 16px;
   }
 
+  .overlay {
+    position: absolute;
+    top: 30px;
+    left: 16px;
+    right: 16px;
+    z-index: 20;
+  }
   
   /* TOP BAR */
   .top-bar {
-    position: absolute;
-    top: 110px;
-    left: 12px;
-    right: 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
   
   /* BADGES */
