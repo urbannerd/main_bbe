@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Log In | Bag Builders Exchange</title>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="/static/auth.css">
+
+    <script src="/static/js/auth.js" defer></script>
+</head>
+
+<body>
+
+<header class="nav auth-nav">
+    <div class="wrap">
+        <div class="nav-inner">
+
+            <a class="brand" href="/">
+                <img
+                    src="/assets/logo.png"
+                    class="logo-img"
+                    alt="Bag Builders Exchange">
+            </a>
+
+            <nav class="nav-links">
+                <a href="/#modules">Dashboards</a>
+                <a href="/#features">What we do</a>
+                <a href="/#how">How it works</a>
+                <a href="/#faq">FAQ</a>
+            </nav>
+
+            <div class="nav-cta">
+                <a class="btn primary is-active" href="/login">
+                    Log In
+                </a>
+
+                <a class="btn ghost" href="/register">
+                    Create Account
+                </a>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<main class="auth-page">
+
+    <section class="auth-brand">
+
+        <div class="auth-brand-inner">
+
+            <h1>
+                Welcome Back.
+            </h1>
+
+            <p>
+                Sign in to access your market dashboards,
+                scanners, saved settings, and member tools.
+            </p>
+
+        </div>
+
+    </section>
+
+    <section class="auth-panel">
+
+        <div class="auth-card">
+
+            <h2>Member Login</h2>
+
+            <p class="auth-subtitle">
+                Continue to your Bag Builders Exchange account.
+            </p>
+
+            <form id="login-form">
+
+                <div class="form-group">
+
+                    <label>Email Address</label>
+
+                    <input
+                        id="email"
+                        class="form-control"
+                        type="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <input
+                        id="password"
+                        class="form-control"
+                        type="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+                <div class="form-row">
+
+                    <label class="remember">
+                        <input type="checkbox">
+                        Remember me
+                    </label>
+
+                    <a href="/forgot-password">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <button class="auth-button">
+                    Log In
+                </button>
+
+                <p
+                    id="auth-message"
+                    class="auth-message">
+                </p>
+
+            </form>
+
+            <p class="auth-footer">
+
+                Don't have an account?
+
+                <a href="/register">
+                    Create one
+                </a>
+
+            </p>
+
+            <a class="back-link" href="/">
+                ← Return to Homepage
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

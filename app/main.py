@@ -62,3 +62,17 @@ def privacy_page():
 @app.get("/disclaimer")
 def disclaimer_page():
     return FileResponse("static/disclaimer.html")
+
+@app.get("/login")
+def login_page():
+    return FileResponse("static/auth/login.html")
+
+
+@app.get("/register")
+def register_page():
+    return FileResponse("static/auth/register.html")
+
+
+@app.get("/account")
+def account_page():
+    return FileResponse("static/auth/account.html")

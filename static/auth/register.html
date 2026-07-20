@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create Account | Bag Builders Exchange</title>
+
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/static/auth.css">
+  <script src="/static/js/auth.js" defer></script>
+</head>
+
+<body>
+    <header class="nav auth-nav">
+        <div class="wrap">
+          <div class="nav-inner">
+            <a class="brand" href="/">
+              <img
+                src="/assets/logo.png"
+                class="logo-img"
+                alt="Bag Builders Exchange Logo"
+              >
+            </a>
+      
+            <nav class="nav-links" aria-label="Primary">
+              <a href="/#modules">Dashboards</a>
+              <a href="/#features">What we do</a>
+              <a href="/#how">How it works</a>
+              <a href="/#faq">FAQ</a>
+            </nav>
+      
+            <div class="nav-cta">
+              <a class="btn ghost" href="/login">Log in</a>
+              <a class="btn primary is-active" href="/register">
+                Create account
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+  <main class="auth-page">
+    <section class="auth-brand">
+      <div class="auth-brand-inner">
+
+        <h1>
+            Build your edge.<br>
+            Access every tool.
+        </h1>
+
+        <p>
+        Create one account for live market dashboards, scanner tools,
+        saved access, and future membership features.
+        </p>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <h2>Create your account</h2>
+
+        <p class="auth-subtitle">
+          Enter your information to get started.
+        </p>
+
+        <form id="register-form">
+          <div class="form-group">
+            <label for="email">Email address</label>
+
+            <input
+              class="form-control"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+
+            <input
+              class="form-control"
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Create a password"
+              minlength="8"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirm password</label>
+
+            <input
+              class="form-control"
+              id="confirm-password"
+              name="confirm_password"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Enter the password again"
+              minlength="8"
+              required
+            >
+          </div>
+
+          <label class="terms-row">
+            <input id="terms" name="terms" type="checkbox" required>
+
+            <span>
+              I agree to the
+              <a href="/terms">Terms</a>,
+              <a href="/privacy">Privacy Policy</a>,
+              and <a href="/disclaimer">Disclaimer</a>.
+            </span>
+          </label>
+
+          <button class="auth-button" type="submit">
+            Create account
+          </button>
+
+          <p id="auth-message" class="auth-message"></p>
+        </form>
+
+        <p class="auth-footer">
+          Already have an account?
+          <a href="/login">Log in</a>
+        </p>
+
+        <a class="back-link" href="/">
+          ← Return to homepage
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

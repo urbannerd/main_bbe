@@ -515,3 +515,39 @@ html {
   .logo-img:hover{
     transform: scale(1.06);
   }
+
+  /* login and registeration */
+  .nav-cta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .auth-nav-login {
+    color: var(--muted);
+  }
+  
+  .auth-nav-register {
+    padding-inline: 16px;
+  }
+  
+  @media (max-width: 760px) {
+    .nav-inner {
+      height: auto;
+      min-height: 72px;
+      padding: 10px 0;
+    }
+  
+    .nav-cta {
+      gap: 6px;
+    }
+  
+    .nav-cta .btn {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+  
+    .nav-cta .auth-nav-login {
+      display: none;
+    }
+  }
