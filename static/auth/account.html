@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Bag Builders Exchange member account dashboard."
+  >
+
+  <title>My Account | Bag Builders Exchange</title>
+
+  <link
+    rel="stylesheet"
+    href="/static/styles.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/static/auth.css"
+  >
+
+  <script
+    src="/static/js/account.js"
+    defer
+  ></script>
+</head>
+
+<body>
+  <div
+    id="account-loading"
+    class="account-loading"
+  >
+    <div class="account-loading-card">
+      <img
+        src="/assets/logo.png"
+        alt="Bag Builders Exchange"
+        class="account-loading-logo"
+      >
+
+      <p>Loading your account...</p>
+    </div>
+  </div>
+
+  <div
+    id="account-page"
+    class="account-page"
+    hidden
+  >
+    <header class="account-header">
+      <div class="account-header-inner">
+        <a
+          href="/"
+          class="account-brand"
+          aria-label="Bag Builders Exchange home"
+        >
+          <img
+            src="/assets/logo.png"
+            alt="Bag Builders Exchange"
+            class="account-logo"
+          >
+        </a>
+
+        <nav
+          class="account-nav-links"
+          aria-label="Account navigation"
+        >
+          <a
+            href="/account"
+            class="is-active"
+          >
+            Dashboard
+          </a>
+
+          <a href="/qqq">
+            QQQ Scanner
+          </a>
+
+          <a href="/spy">
+            SPY Scanner
+          </a>
+
+          <a href="/support">
+            Support
+          </a>
+        </nav>
+
+        <button
+          id="logout-button"
+          class="account-logout-button"
+          type="button"
+        >
+          Log Out
+        </button>
+      </div>
+    </header>
+
+    <main class="account-main">
+      <section class="account-hero">
+        <div>
+          <p class="account-eyebrow">
+            Member Dashboard
+          </p>
+
+          <h1>
+            Welcome back
+          </h1>
+
+          <p class="account-hero-copy">
+            Manage your Bag Builders Exchange account,
+            scanner access, and membership details.
+          </p>
+        </div>
+
+        <div class="account-user-card">
+          <span class="account-user-label">
+            Signed in as
+          </span>
+
+          <strong
+            id="account-email"
+            class="account-email"
+          >
+            Loading...
+          </strong>
+
+          <span
+            id="account-status"
+            class="account-status"
+          >
+            Active member
+          </span>
+        </div>
+      </section>
+
+      <div
+        id="account-message"
+        class="account-message"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+      <section
+        class="account-grid"
+        aria-label="Member tools"
+      >
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Scanner
+              </p>
+
+              <h2>
+                QQQ Impulse Scanner
+              </h2>
+            </div>
+
+            <span
+              id="qqq-access-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <p>
+            Open the QQQ scanner and review the latest
+            available market signals.
+          </p>
+
+          <a
+          id="qqq-access-link"
+          href="/qqq"
+          class="account-card-action"
+        >
+          Open QQQ Scanner
+        </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Scanner
+              </p>
+
+              <h2>
+                SPY Impulse Scanner
+              </h2>
+            </div>
+
+            <span
+            id="spy-access-badge"
+            class="account-card-badge account-card-badge-muted"
+          >
+            Checking...
+          </span>
+          </div>
+
+          <p>
+            Open the SPY scanner and review the latest
+            available market signals.
+          </p>
+
+          <a
+            id="spy-access-link"
+            href="/spy"
+            class="account-card-action"
+          >
+            Open SPY Scanner
+          </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Membership
+              </p>
+
+              <h2>
+                Subscription
+              </h2>
+            </div>
+
+            <span
+            id="subscription-badge"
+            class="account-card-badge account-card-badge-muted"
+          >
+            Checking...
+          </span>
+          </div>
+
+          <p>
+            Billing and subscription management will appear
+            here after Stripe is connected.
+          </p>
+
+          <button
+            class="account-card-action account-card-action-disabled"
+            type="button"
+            disabled
+          >
+            Manage Subscription
+          </button>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Account
+              </p>
+
+              <h2>
+                Profile Details
+              </h2>
+            </div>
+          </div>
+
+          <dl class="account-details">
+            <div>
+              <dt>Email</dt>
+
+              <dd id="profile-email">
+                Loading...
+              </dd>
+            </div>
+
+            <div>
+              <dt>Status</dt>
+
+              <dd id="profile-status">
+                Loading...
+              </dd>
+            </div>
+
+            <div>
+              <dt>Member since</dt>
+
+              <dd id="profile-created-at">
+                Loading...
+              </dd>
+            </div>
+          </dl>
+        </article>
+      </section>
+
+      <section class="account-support-panel">
+        <div>
+          <p class="account-card-eyebrow">
+            Need help?
+          </p>
+
+          <h2>
+            Member Support
+          </h2>
+
+          <p>
+            Contact support if you are having trouble with
+            your account or scanner access.
+          </p>
+        </div>
+
+        <a
+          href="/support"
+          class="account-support-link"
+        >
+          Contact Support
+        </a>
+      </section>
+    </main>
+
+    <footer class="account-footer">
+      <div class="account-footer-inner">
+        <span>
+          © <span id="account-year"></span>
+          Bag Builders Exchange
+        </span>
+
+        <nav aria-label="Legal links">
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/disclaimer">Disclaimer</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,6 +1,7 @@
-.venv/
-__pycache__/
-*.pyc
 .env
+bbe.db
+__pycache__/
+*.py[cod]
 .DS_Store
-*.save
+.venv/
+venv/
