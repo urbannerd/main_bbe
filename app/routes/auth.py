@@ -309,6 +309,16 @@ def nginx_qqq_live_chart_access(
     require_tool_access(user, "qqq-live-chart")
 
     return {"allowed": True}
+
+@router.get("/nginx/spy-live-chart")
+def nginx_spy_live_chart_access(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "spy-live-chart")
+
+    return {"allowed": True}
     
 @router.post("/logout")
 def logout_user(request: Request):
