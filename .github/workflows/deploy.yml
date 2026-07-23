@@ -24,16 +24,19 @@ jobs:
             set -euo pipefail
 
             APP_DIR=/var/www/main_bbe
+            BACKUP_DIR=/var/backups/main_bbe
             SERVICE_NAME=main_bbe.service
+
             PYTHON="$APP_DIR/.venv/bin/python"
             ALEMBIC="$APP_DIR/.venv/bin/alembic"
+            DATABASE="$APP_DIR/bbe.db"
 
             cd "$APP_DIR"
 
             git config --global --add safe.directory "$APP_DIR" || true
 
             echo "Fetching application code..."
-            git fetch origin
+            git fetch --prune origin
             git reset --hard origin/main
 
             echo "Ensuring virtual environment exists..."
@@ -45,23 +48,57 @@ jobs:
             "$PYTHON" -m pip install --upgrade pip setuptools wheel
             "$PYTHON" -m pip install -r "$APP_DIR/requirements.txt"
 
-            echo "Backing up database..."
-            if [ -f "$APP_DIR/bbe.db" ]; then
-              cp "$APP_DIR/bbe.db" \
-                "$APP_DIR/bbe.db.backup-$(date +%Y%m%d-%H%M%S)"
+            echo "Preparing database migration..."
+            sudo mkdir -p "$BACKUP_DIR"
+            sudo chown "$(id -un):$(id -gn)" "$BACKUP_DIR"
+
+            SERVICE_STOPPED=false
+
+            restart_on_failure() {
+              exit_code=$?
+
+              if [ "$exit_code" -ne 0 ] && [ "$SERVICE_STOPPED" = true ]; then
+                echo "Deployment failed; attempting to restart application..."
+                sudo systemctl start "$SERVICE_NAME" || true
+              fi
+
+              exit "$exit_code"
+            }
+
+            trap restart_on_failure EXIT
+
+            echo "Stopping application..."
+            sudo systemctl stop "$SERVICE_NAME"
+            SERVICE_STOPPED=true
+
+            if [ -f "$DATABASE" ]; then
+              BACKUP_FILE="$BACKUP_DIR/bbe-$(date -u +%Y%m%d-%H%M%S).db"
+
+              echo "Backing up database to $BACKUP_FILE..."
+              sqlite3 "$DATABASE" ".backup '$BACKUP_FILE'"
             fi
 
             echo "Running database migrations..."
             "$ALEMBIC" upgrade head
 
-            echo "Restarting application..."
-            sudo systemctl restart "$SERVICE_NAME"
+            echo "Starting application..."
+            sudo systemctl start "$SERVICE_NAME"
+            SERVICE_STOPPED=false
 
             echo "Checking application service..."
             sudo systemctl is-active --quiet "$SERVICE_NAME"
 
-            echo "Reloading nginx..."
+            echo "Checking nginx configuration..."
             sudo nginx -t
             sudo systemctl reload nginx
+
+            echo "Removing database backups older than 14 days..."
+            find "$BACKUP_DIR" \
+              -type f \
+              -name 'bbe-*.db' \
+              -mtime +14 \
+              -delete
+
+            trap - EXIT
 
             echo "✅ deployed $(git rev-parse --short HEAD)"
