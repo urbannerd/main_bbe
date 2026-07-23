@@ -1,48 +1,78 @@
-name: Deploy to Prod
+name: PR Check
 
 on:
-  push:
-    branches: ["main"]
+  pull_request:
+    branches:
+      - main
+      - dev
 
-concurrency:
-  group: prod-deploy
-  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  check:
     runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: sqlite:///./pr-check.db
+
     steps:
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Check out repository
+        uses: actions/checkout@v4
         with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          script: |
-            set -e
+          fetch-depth: 0
 
-            APP_DIR=/var/www/main_bbe
-            SERVICE_NAME=main_bbe.service
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
 
-            cd "$APP_DIR"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
 
-            git config --global --add safe.directory "$APP_DIR" || true
+      - name: Verify application imports
+        run: |
+          python -c "from app.main import app; print('Application import succeeded')"
 
-            git fetch origin
-            git reset --hard origin/main
+      - name: Verify one Alembic head
+        run: |
+          HEAD_COUNT="$(alembic heads | grep -c '(head)')"
 
-            # Ensure venv exists (self-heal)
-            if [ ! -x "$APP_DIR/.venv/bin/python" ]; then
-              python3 -m venv "$APP_DIR/.venv"
+          if [ "$HEAD_COUNT" -ne 1 ]; then
+            echo "Expected exactly one Alembic head, found $HEAD_COUNT"
+            alembic heads
+            exit 1
+          fi
+
+      - name: Build database from migrations
+        run: |
+          rm -f pr-check.db
+          alembic upgrade head
+
+      - name: Verify schema matches models
+        run: |
+          alembic current
+          alembic check
+
+      - name: Test downgrade and rebuild
+        run: |
+          alembic downgrade base
+          alembic upgrade head
+          alembic check
+
+      - name: Require migration when models change
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          CHANGED_FILES="$(git diff --name-only "$BASE_SHA"...HEAD)"
+
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -Eq '^app/models(\.py|/)'; then
+            if ! echo "$CHANGED_FILES" | grep -Eq '^migrations/versions/.*\.py$'; then
+              echo "SQLAlchemy models changed, but no Alembic migration was added."
+              exit 1
             fi
-
-            "$APP_DIR/.venv/bin/python" -m pip install --upgrade pip setuptools wheel
-
-            if [ -f "$APP_DIR/requirements.txt" ]; then
-              "$APP_DIR/.venv/bin/python" -m pip install -r "$APP_DIR/requirements.txt"
-            fi
-
-            sudo systemctl restart "$SERVICE_NAME"
-            sudo systemctl reload nginx
-
-            echo "✅ deployed $(git rev-parse --short HEAD)"
+          fi
