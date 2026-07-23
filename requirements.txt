@@ -11,4 +11,5 @@ pydantic
 pydantic-settings
 stripe
 httpx
-requestsalembic==1.18.5
+requests
+alembic==1.18.5
