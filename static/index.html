@@ -160,6 +160,24 @@
       box-shadow: none;
     }
   </style>
+
+  <style id="dropdown-interaction-fix">
+    /* Remove the hover gap between each trigger and its menu. */
+    .account-nav-menu {
+      top: 100% !important;
+      margin-top: 0 !important;
+    }
+
+    /* Keep the menu available while the pointer moves into it. */
+    .account-nav-dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 8px;
+    }
+  </style>
 </head>
 
 <body>
@@ -524,7 +542,7 @@
   <script src="js/bbe_main.js"></script>
 
 <script>
-document.querySelectorAll('.account-nav-dropdown').forEach(d=>{
+document.querySelectorAll('.account-nav-dropdown-disabled').forEach(d=>{
  d.addEventListener('mouseenter',()=>d.classList.add('is-open'));
  d.addEventListener('mouseleave',()=>d.classList.remove('is-open'));
 });
@@ -545,6 +563,77 @@ document.querySelectorAll('.account-nav-dropdown').forEach(d=>{
       .forEach((element) => {
         element.textContent = String(new Date().getFullYear());
       });
+  </script>
+
+  <script id="dropdown-interaction-script">
+    document.querySelectorAll(".account-nav-dropdown").forEach((dropdown) => {
+      const trigger = dropdown.querySelector(".account-nav-trigger");
+      const menu = dropdown.querySelector(".account-nav-menu");
+
+      if (!trigger || !menu) return;
+
+      trigger.setAttribute("aria-haspopup", "true");
+      trigger.setAttribute("aria-expanded", "false");
+
+      const openMenu = () => {
+        dropdown.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      };
+
+      const closeMenu = () => {
+        dropdown.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const wasOpen = dropdown.classList.contains("is-open");
+
+        document.querySelectorAll(".account-nav-dropdown.is-open").forEach((item) => {
+          item.classList.remove("is-open");
+          item
+            .querySelector(".account-nav-trigger")
+            ?.setAttribute("aria-expanded", "false");
+        });
+
+        if (!wasOpen) openMenu();
+      });
+
+      dropdown.addEventListener("mouseenter", openMenu);
+      dropdown.addEventListener("mouseleave", closeMenu);
+
+      menu.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+
+      dropdown.addEventListener("focusout", (event) => {
+        if (!dropdown.contains(event.relatedTarget)) {
+          closeMenu();
+        }
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
+        dropdown.classList.remove("is-open");
+        dropdown
+          .querySelector(".account-nav-trigger")
+          ?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+
+      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
+        dropdown.classList.remove("is-open");
+        dropdown
+          .querySelector(".account-nav-trigger")
+          ?.setAttribute("aria-expanded", "false");
+      });
+    });
   </script>
 </body>
 </html>
