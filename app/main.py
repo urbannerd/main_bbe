@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import Depends, FastAPI, Request
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
@@ -157,6 +157,9 @@ def register_page(request: Request):
 
     return FileResponse("static/auth/register.html")
 
+@app.get("/pricing")
+def pricing_page():
+    return FileResponse("static/auth/pricing.html")
 
 @app.get("/account")
 def account_page(request: Request):

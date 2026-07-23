@@ -223,3 +223,10 @@ if (loginForm) {
     }
   });
 }
+
+document
+  .querySelectorAll(".site-footer-year")
+  .forEach((element) => {
+    element.textContent =
+      String(new Date().getFullYear());
+  });

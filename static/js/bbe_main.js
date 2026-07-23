@@ -189,3 +189,10 @@ function escapeHtml(str) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+
+document
+  .querySelectorAll(".site-footer-year")
+  .forEach((element) => {
+    element.textContent =
+      String(new Date().getFullYear());
+  });

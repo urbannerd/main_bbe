@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Compare Bag Builders Exchange membership plans and choose the tools that fit your trading workflow."
+  >
+
+  <title>Pricing | Bag Builders Exchange</title>
+
+  <link
+    rel="icon"
+    href="/assets/favicon.ico"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/styles.css?v=1"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/static/auth.css?v=3"
+  >
+
+  <script
+    src="/static/js/pricing.js?v=2"
+    defer
+  ></script>
+
+  <style id="shared-navigation-styles">
+    .account-nav-dropdown {
+      position: relative;
+    }
+
+    .account-nav-trigger {
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .account-nav-trigger:hover,
+    .account-nav-dropdown:focus-within .account-nav-trigger,
+    .account-nav-dropdown.is-open .account-nav-trigger {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .account-nav-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      z-index: 1000;
+      min-width: 210px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: #09111f;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, -6px);
+      transition:
+        opacity 160ms ease,
+        transform 160ms ease,
+        visibility 160ms ease;
+    }
+
+    .account-nav-menu a {
+      display: block;
+      padding: 13px 16px;
+      border-radius: 12px;
+      color: var(--text) !important;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .account-nav-menu a:hover,
+    .account-nav-menu a:focus-visible {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .account-nav-dropdown:hover .account-nav-menu,
+    .account-nav-dropdown:focus-within .account-nav-menu,
+    .account-nav-dropdown.is-open .account-nav-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+
+    /* Only an explicitly marked link receives the active-page treatment. */
+    .account-nav-links > a:not(.is-active) {
+      box-shadow: none;
+    }
+
+    @media (max-width: 900px) {
+      .account-nav-menu {
+        left: 0;
+        transform: translate(0, -6px);
+      }
+
+      .account-nav-dropdown:hover .account-nav-menu,
+      .account-nav-dropdown:focus-within .account-nav-menu,
+      .account-nav-dropdown.is-open .account-nav-menu {
+        transform: translate(0, 0);
+      }
+    }
+  </style>
+</head>
+
+<body class="pricing-page">
+  <header class="account-header">
+    <div class="account-header-inner">
+      <a href="/" class="account-brand" aria-label="Bag Builders Exchange home">
+        <img
+          src="/assets/logo.png"
+          alt="Bag Builders Exchange"
+          class="account-logo"
+        >
+      </a>
+
+      <nav class="account-nav-links" aria-label="Primary navigation">
+        <a href="/">Home</a>
+
+        <div class="account-nav-dropdown">
+          <button
+            class="account-nav-trigger"
+            type="button"
+            aria-expanded="false"
+          >
+            QQQ <span aria-hidden="true">▾</span>
+          </button>
+          <div class="account-nav-menu">
+            <a href="/qqq">Live Chart</a>
+            <a href="/qqq-board-scale">Board Scale</a>
+          </div>
+        </div>
+
+        <div class="account-nav-dropdown">
+          <button
+            class="account-nav-trigger"
+            type="button"
+            aria-expanded="false"
+          >
+            SPY <span aria-hidden="true">▾</span>
+          </button>
+          <div class="account-nav-menu">
+            <a href="/spy">Live Chart</a>
+            <a href="/spy-board-scale">Board Scale</a>
+          </div>
+        </div>
+
+        <a href="/impulse">Impulse</a>
+        <a href="/leap">Leap</a>
+        <a href="/pricing" class="is-active">Pricing</a>
+      </nav>
+
+      <div class="account-header-actions" id="site-account-actions">
+        <a class="btn gold" id="site-create-account" href="/register">
+          Create Account
+        </a>
+        <a
+          class="account-logout-button"
+          id="site-login-link"
+          href="/login"
+        >
+          Log In
+        </a>
+        <a
+          class="account-logout-button"
+          id="site-account-link"
+          href="/account"
+          hidden
+        >
+          My Account
+        </a>
+      </div>
+    </div>
+  </header>
+
+<main class="pricing-main">
+    <section class="pricing-hero">
+      <p class="account-eyebrow">
+        Membership plans
+      </p>
+
+      <h1>
+        Choose the tools that match your edge.
+      </h1>
+
+      <p>
+        Start with market education, add live chart access,
+        then unlock Board Scale and proprietary scanner tools
+        as your workflow grows.
+      </p>
+
+      <div
+        class="pricing-hero-divider"
+        aria-hidden="true"
+      ></div>
+    </section>
+
+    <section
+      class="pricing-grid"
+      aria-label="Pricing plans"
+    >
+      <article
+        class="pricing-card"
+        data-plan-card="free"
+      >
+        <div class="pricing-card-heading">
+          <div>
+            <p class="pricing-card-kicker">
+              Get started
+            </p>
+
+            <h2>Free</h2>
+          </div>
+
+          <span class="pricing-plan-icon" aria-hidden="true">
+            0
+          </span>
+        </div>
+
+        <p class="pricing-price">
+          $0
+          <span>/ month</span>
+        </p>
+
+        <p class="pricing-card-description">
+          Explore the platform and learn how the tools work.
+        </p>
+
+        <ul class="pricing-features">
+          <li>Education and documentation</li>
+          <li>Delayed examples</li>
+          <li>Member account access</li>
+        </ul>
+
+        <a
+          class="account-card-action"
+          data-plan-action="free"
+          href="/register"
+        >
+          Create Free Account
+        </a>
+      </article>
+
+      <article
+        class="pricing-card"
+        data-plan-card="starter"
+      >
+        <div class="pricing-card-heading">
+          <div>
+            <p class="pricing-card-kicker">
+              Live market access
+            </p>
+
+            <h2>Starter</h2>
+          </div>
+
+          <span class="pricing-plan-icon" aria-hidden="true">
+            S
+          </span>
+        </div>
+
+        <p class="pricing-price">
+          $49
+          <span>/ month</span>
+        </p>
+
+        <p class="pricing-card-description">
+          Get live visibility into SPY and QQQ market movement.
+        </p>
+
+        <ul class="pricing-features">
+          <li>Everything in Free</li>
+          <li>QQQ Live Chart</li>
+          <li>SPY Live Chart</li>
+        </ul>
+
+        <button
+          class="account-card-action"
+          data-plan-action="starter"
+          type="button"
+        >
+          Choose Starter
+        </button>
+      </article>
+
+      <article
+        class="pricing-card"
+        data-plan-card="trader"
+        data-featured="true"
+      >
+        <span class="pricing-card-badge">
+          Most Popular
+        </span>
+
+        <div class="pricing-card-heading">
+          <div>
+            <p class="pricing-card-kicker">
+              Deeper analysis
+            </p>
+
+            <h2>Trader</h2>
+          </div>
+
+          <span class="pricing-plan-icon" aria-hidden="true">
+            T
+          </span>
+        </div>
+
+        <p class="pricing-price">
+          $99
+          <span>/ month</span>
+        </p>
+
+        <p class="pricing-card-description">
+          Add Board Scale tools for more detailed market context.
+        </p>
+
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>QQQ Board Scale</li>
+          <li>SPY Board Scale</li>
+        </ul>
+
+        <button
+          class="account-card-action"
+          data-plan-action="trader"
+          type="button"
+        >
+          Choose Trader
+        </button>
+      </article>
+
+      <article
+        class="pricing-card"
+        data-plan-card="professional"
+      >
+        <div class="pricing-card-heading">
+          <div>
+            <p class="pricing-card-kicker">
+              Complete toolset
+            </p>
+
+            <h2>Professional</h2>
+          </div>
+
+          <span class="pricing-plan-icon" aria-hidden="true">
+            P
+          </span>
+        </div>
+
+        <p class="pricing-price">
+          $149
+          <span>/ month</span>
+        </p>
+
+        <p class="pricing-card-description">
+          Unlock proprietary scanners and future premium tools.
+        </p>
+
+        <ul class="pricing-features">
+          <li>Everything in Trader</li>
+          <li>Impulse Scanner</li>
+          <li>Leap Scanner</li>
+          <li>Future premium tools</li>
+        </ul>
+
+        <button
+          class="account-card-action"
+          data-plan-action="professional"
+          type="button"
+        >
+          Choose Professional
+        </button>
+      </article>
+    </section>
+
+    <p
+      id="pricing-message"
+      class="pricing-message"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <section
+      class="pricing-faq"
+      aria-labelledby="pricing-faq-title"
+    >
+      <div class="pricing-section-heading">
+        <p class="account-eyebrow">
+          Help center
+        </p>
+
+        <h2 id="pricing-faq-title">
+          Membership questions
+        </h2>
+
+        <p>
+          Find answers to common questions about membership,
+          billing, upgrades, and cancellations.
+        </p>
+
+        <div
+          class="pricing-section-divider"
+          aria-hidden="true"
+        ></div>
+      </div>
+
+      <div class="pricing-faq-list">
+        <details class="pricing-faq-item">
+          <summary>
+            <span
+              class="pricing-faq-icon"
+              aria-hidden="true"
+            >
+              ↑
+            </span>
+
+            <span class="pricing-faq-question">
+              Can I upgrade later?
+            </span>
+
+            <span
+              class="pricing-faq-chevron"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="pricing-faq-answer">
+            <p>
+              Yes. You can move to a higher plan from your
+              account dashboard. Stripe calculates any applicable
+              billing adjustment automatically.
+            </p>
+          </div>
+        </details>
+
+        <details class="pricing-faq-item">
+          <summary>
+            <span
+              class="pricing-faq-icon"
+              aria-hidden="true"
+            >
+              ◷
+            </span>
+
+            <span class="pricing-faq-question">
+              What happens when I cancel?
+            </span>
+
+            <span
+              class="pricing-faq-chevron"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="pricing-faq-answer">
+            <p>
+              Your paid access remains active through the end
+              of the current billing period. Your account dashboard
+              will display the exact date your access ends.
+            </p>
+          </div>
+        </details>
+
+        <details class="pricing-faq-item">
+          <summary>
+            <span
+              class="pricing-faq-icon"
+              aria-hidden="true"
+            >
+              ▣
+            </span>
+
+            <span class="pricing-faq-question">
+              Can I manage my payment method and invoices?
+            </span>
+
+            <span
+              class="pricing-faq-chevron"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="pricing-faq-answer">
+            <p>
+              Yes. Paid members can open the secure Stripe
+              billing portal from the account dashboard to update
+              payment information, view invoices, or manage
+              cancellation.
+            </p>
+          </div>
+        </details>
+
+        <details class="pricing-faq-item">
+          <summary>
+            <span
+              class="pricing-faq-icon"
+              aria-hidden="true"
+            >
+              ◇
+            </span>
+
+            <span class="pricing-faq-question">
+              Is this financial advice?
+            </span>
+
+            <span
+              class="pricing-faq-chevron"
+              aria-hidden="true"
+            ></span>
+          </summary>
+
+          <div class="pricing-faq-answer">
+            <p>
+              No. Bag Builders Exchange provides educational
+              tools and market information. It does not provide
+              individualized financial advice, brokerage services,
+              or investment recommendations.
+            </p>
+          </div>
+        </details>
+      </div>
+
+      <aside class="pricing-support-callout">
+        <div class="pricing-support-content">
+          <span
+            class="pricing-support-icon"
+            aria-hidden="true"
+          >
+            ?
+          </span>
+
+          <div>
+            <h3>Still need help?</h3>
+
+            <p>
+              Our support team is here to help with membership
+              and billing questions.
+            </p>
+          </div>
+        </div>
+
+        <a
+          class="account-card-action"
+          href="/support"
+        >
+          Visit Support
+          <span aria-hidden="true">→</span>
+        </a>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="site-footer-copy">
+        <p class="site-footer-brand">
+          Bag Builders <strong>Exchange</strong>
+        </p>
+  
+        <p>
+          Educational purposes only—no financial advice.
+        </p>
+  
+        <p>
+          © <span class="site-footer-year"></span>
+          Bag Builders Exchange
+          <span aria-hidden="true">•</span>
+          Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
+        </p>
+      </div>
+  
+      <nav
+        class="site-footer-links"
+        aria-label="Footer navigation"
+      >
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+        <a href="/support">Support</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/disclaimer">Disclaimer</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script id="shared-navigation-script">
+    async function updateSiteAccountActions() {
+      const createAccount = document.getElementById("site-create-account");
+      const loginLink = document.getElementById("site-login-link");
+      const accountLink = document.getElementById("site-account-link");
+
+      if (!createAccount || !loginLink || !accountLink) return;
+
+      try {
+        const response = await fetch("/api/auth/me", {
+          credentials: "same-origin",
+          cache: "no-store",
+          headers: { Accept: "application/json" }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        if (data.user) {
+          createAccount.hidden = true;
+          loginLink.hidden = true;
+          accountLink.hidden = false;
+        }
+      } catch (error) {
+        console.error("Unable to load account state:", error);
+      }
+    }
+
+    document.querySelectorAll(".account-nav-dropdown").forEach((dropdown) => {
+      const trigger = dropdown.querySelector(".account-nav-trigger");
+
+      trigger?.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        document.querySelectorAll(".account-nav-dropdown.is-open").forEach((openDropdown) => {
+          if (openDropdown !== dropdown) {
+            openDropdown.classList.remove("is-open");
+            openDropdown
+              .querySelector(".account-nav-trigger")
+              ?.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        const isOpen = dropdown.classList.toggle("is-open");
+        trigger.setAttribute("aria-expanded", String(isOpen));
+      });
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
+        dropdown.classList.remove("is-open");
+        dropdown
+          .querySelector(".account-nav-trigger")
+          ?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+
+      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
+        dropdown.classList.remove("is-open");
+        dropdown
+          .querySelector(".account-nav-trigger")
+          ?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    updateSiteAccountActions();
+  </script>
+</body>
+</html>

@@ -22,11 +22,11 @@
 
   <link
     rel="stylesheet"
-    href="/static/auth.css?v=1"
+    href="/static/auth.css?v=2"
   >
 
   <script
-    src="/static/js/account.js?v=4"
+    src="/static/js/account.js?v=5"
     defer
 ></script>
 </head>
@@ -83,6 +83,10 @@
 
           <a href="/spy">
             SPY Scanner
+          </a>
+
+          <a href="/pricing">
+            Pricing
           </a>
 
           <a href="/support">
@@ -246,6 +250,21 @@
               <span>Status</span>
               <strong id="subscription-status">Loading...</strong>
             </div>
+
+            <div id="subscription-renewal-item" hidden>
+              <span id="subscription-renewal-label">Renews On</span>
+              <strong id="subscription-renewal-date">Loading...</strong>
+            </div>
+          </div>
+
+          <div
+            id="subscription-cancellation-notice"
+            class="subscription-cancellation-notice"
+            role="status"
+            hidden
+          >
+            <strong>Your subscription is scheduled to cancel.</strong>
+            <span id="subscription-cancellation-copy"></span>
           </div>
 
           <p>
@@ -346,14 +365,32 @@
       </section>
     </main>
 
-    <footer class="account-footer">
-      <div class="account-footer-inner">
-        <span>
-          © <span id="account-year"></span>
-          Bag Builders Exchange
-        </span>
-
-        <nav aria-label="Legal links">
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <div class="site-footer-copy">
+          <p class="site-footer-brand">
+            Bag Builders <strong>Exchange</strong>
+          </p>
+    
+          <p>
+            Educational purposes only—no financial advice.
+          </p>
+    
+          <p>
+            © <span class="site-footer-year"></span>
+            Bag Builders Exchange
+            <span aria-hidden="true">•</span>
+            Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
+          </p>
+        </div>
+    
+        <nav
+          class="site-footer-links"
+          aria-label="Footer navigation"
+        >
+          <a href="/pricing">Pricing</a>
+          <a href="/docs">Docs</a>
+          <a href="/support">Support</a>
           <a href="/terms">Terms</a>
           <a href="/privacy">Privacy</a>
           <a href="/disclaimer">Disclaimer</a>
