@@ -337,10 +337,62 @@ def change_subscription(
         )
 
     if not user.stripe_subscription_id:
-        raise HTTPException(
-            status_code=400,
-            detail="No Stripe subscription exists for this account.",
-        )
+        checkout_params = {
+            "mode": "subscription",
+            "line_items": [
+                {
+                    "price": target_price_id,
+                    "quantity": 1,
+                }
+            ],
+            "success_url": (
+                f"{APP_BASE_URL}/account"
+                "?checkout=success&session_id={{CHECKOUT_SESSION_ID}}"
+            ),
+            "cancel_url": (
+                f"{APP_BASE_URL}/account"
+                "?checkout=cancelled"
+            ),
+            "client_reference_id": str(user.id),
+            "metadata": {
+                "user_id": str(user.id),
+                "plan": target_plan,
+            },
+            "subscription_data": {
+                "metadata": {
+                    "user_id": str(user.id),
+                    "plan": target_plan,
+                }
+            },
+        }
+
+        if user.stripe_customer_id:
+            checkout_params["customer"] = (
+                user.stripe_customer_id
+            )
+        else:
+            checkout_params["customer_email"] = user.email
+
+        try:
+            checkout_session = (
+                stripe.checkout.Session.create(
+                    **checkout_params
+                )
+            )
+        except stripe.StripeError as error:
+            error_message = (
+                getattr(error, "user_message", None)
+                or str(error)
+            )
+
+            raise HTTPException(
+                status_code=502,
+                detail=error_message,
+            ) from error
+
+        return {
+            "checkout_url": checkout_session.url,
+        }
 
     current_plan = (user.membership_plan or "free").lower()
 
