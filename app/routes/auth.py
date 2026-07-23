@@ -1,4 +1,6 @@
+import os 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.exc import IntegrityError
@@ -327,3 +329,27 @@ def logout_user(request: Request):
     return {
         "message": "You have been logged out.",
     }
+
+
+@router.get("/logout")
+def logout_user_browser(request: Request):
+    request.session.clear()
+
+    response = RedirectResponse(
+        url="/login",
+        status_code=303,
+    )
+
+    cookie_options = {
+        "key": "bbe_session",
+        "path": "/",
+        "samesite": "lax",
+    }
+
+    if os.getenv("APP_ENV", "development").lower() == "production":
+        cookie_options["domain"] = ".bagbuildersexchange.com"
+        cookie_options["secure"] = True
+
+    response.delete_cookie(**cookie_options)
+
+    return response

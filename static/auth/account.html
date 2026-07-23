@@ -15,20 +15,20 @@
 
   <title>My Account | Bag Builders Exchange</title>
 
-  <link
+    <link
     rel="stylesheet"
-    href="/static/styles.css"
+    href="/assets/styles.css?v=1"
   >
 
   <link
     rel="stylesheet"
-    href="/static/auth.css"
+    href="/static/auth.css?v=1"
   >
 
   <script
-    src="/static/js/account.js"
+    src="/static/js/account.js?v=4"
     defer
-  ></script>
+></script>
 </head>
 
 <body>
@@ -90,13 +90,12 @@
           </a>
         </nav>
 
-        <button
-          id="logout-button"
+        <a
           class="account-logout-button"
-          type="button"
+          href="/api/auth/logout"
         >
           Log Out
-        </button>
+        </a>
       </div>
     </header>
 
@@ -230,25 +229,55 @@
             </div>
 
             <span
-            id="subscription-badge"
-            class="account-card-badge account-card-badge-muted"
-          >
-            Checking...
-          </span>
+              id="subscription-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <div class="subscription-summary">
+            <div>
+              <span>Current Plan</span>
+              <strong id="subscription-plan">Loading...</strong>
+            </div>
+
+            <div>
+              <span>Status</span>
+              <strong id="subscription-status">Loading...</strong>
+            </div>
           </div>
 
           <p>
-            Billing and subscription management will appear
-            here after Stripe is connected.
+            Manage your subscription, update your payment method,
+            or upgrade your membership plan.
           </p>
 
-          <button
-            class="account-card-action account-card-action-disabled"
-            type="button"
-            disabled
-          >
-            Manage Subscription
-          </button>
+          <div class="subscription-actions">
+            <button
+              id="manage-subscription"
+              class="account-card-action"
+              type="button"
+            >
+              Manage Subscription
+            </button>
+
+            <button
+              id="upgrade-trader"
+              class="account-card-action"
+              type="button"
+            >
+              Upgrade to Trader
+            </button>
+
+            <button
+              id="upgrade-professional"
+              class="account-card-action"
+              type="button"
+            >
+              Upgrade to Professional
+            </button>
+          </div>
         </article>
 
         <article class="account-dashboard-card">

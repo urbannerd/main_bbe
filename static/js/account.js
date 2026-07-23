@@ -1,38 +1,39 @@
 const accountPage = document.getElementById("account-page");
 const accountLoading = document.getElementById("account-loading");
 const accountMessage = document.getElementById("account-message");
-
 const accountEmail = document.getElementById("account-email");
 const accountStatus = document.getElementById("account-status");
-
 const profileEmail = document.getElementById("profile-email");
 const profileStatus = document.getElementById("profile-status");
-const profileCreatedAt =
-  document.getElementById("profile-created-at");
-
-const logoutButton = document.getElementById("logout-button");
+const profileCreatedAt = document.getElementById("profile-created-at");
 const accountYear = document.getElementById("account-year");
 
-const qqqAccessBadge =
-  document.getElementById("qqq-access-badge");
-
-const qqqAccessLink =
-  document.getElementById("qqq-access-link");
-
-const spyAccessBadge =
-  document.getElementById("spy-access-badge");
-
-const spyAccessLink =
-  document.getElementById("spy-access-link");
+const qqqAccessBadge = document.getElementById("qqq-access-badge");
+const qqqAccessLink = document.getElementById("qqq-access-link");
+const spyAccessBadge = document.getElementById("spy-access-badge");
+const spyAccessLink = document.getElementById("spy-access-link");
 
 const subscriptionBadge =
   document.getElementById("subscription-badge");
 
+const subscriptionPlan =
+  document.getElementById("subscription-plan");
+
+const subscriptionStatus =
+  document.getElementById("subscription-status");
+
+const manageSubscription =
+  document.getElementById("manage-subscription");
+
+const upgradeTrader =
+  document.getElementById("upgrade-trader");
+
+const upgradeProfessional =
+  document.getElementById("upgrade-professional");
+
 
 function showAccountMessage(message, type = "error") {
-  if (!accountMessage) {
-    return;
-  }
+  if (!accountMessage) return;
 
   accountMessage.textContent = message;
 
@@ -54,20 +55,12 @@ async function getResponseData(response) {
 
 
 function redirectToLogin() {
-  const nextPath = encodeURIComponent(
-    window.location.pathname
-  );
-
-  window.location.replace(
-    `/login?next=${nextPath}`
-  );
+  window.location.replace("/login");
 }
 
 
 function formatDate(value) {
-  if (!value) {
-    return "Unavailable";
-  }
+  if (!value) return "Unavailable";
 
   const date = new Date(value);
 
@@ -75,44 +68,46 @@ function formatDate(value) {
     return "Unavailable";
   }
 
-  return new Intl.DateTimeFormat(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }
-  ).format(date);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 }
 
 
 function formatMembershipLabel(value) {
-  if (!value) {
-    return "Free";
-  }
+  if (!value) return "Free";
 
-  return value
+  return String(value)
     .replaceAll("_", " ")
     .replaceAll("-", " ")
-    .replace(/\b\w/g, (character) =>
-      character.toUpperCase()
-    );
+    .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
 
-function renderScannerAccess({
-  hasAccess,
-  badge,
-  link,
-}) {
-  if (badge) {
-    badge.textContent = hasAccess
-      ? "Included"
-      : "Locked";
+function setButtonLoading(button, isLoading, loadingText) {
+  if (!button) return;
 
-    badge.dataset.access = hasAccess
-      ? "included"
-      : "locked";
+  if (isLoading) {
+    button.dataset.originalText = button.textContent;
+    button.textContent = loadingText;
+    button.disabled = true;
+    return;
+  }
+
+  button.textContent =
+    button.dataset.originalText || button.textContent;
+
+  button.disabled = false;
+  delete button.dataset.originalText;
+}
+
+
+function renderScannerAccess({ hasAccess, badge, link }) {
+  if (badge) {
+    badge.textContent = hasAccess ? "Included" : "Locked";
+    badge.dataset.access = hasAccess ? "included" : "locked";
 
     badge.classList.toggle(
       "account-card-badge-muted",
@@ -120,84 +115,80 @@ function renderScannerAccess({
     );
   }
 
-  if (!link) {
-    return;
-  }
+  if (!link) return;
 
   if (hasAccess) {
-    link.classList.remove(
-      "account-card-action-disabled"
-    );
-
+    link.classList.remove("account-card-action-disabled");
     link.removeAttribute("aria-disabled");
     link.removeAttribute("tabindex");
-
-    return;
+  } else {
+    link.classList.add("account-card-action-disabled");
+    link.setAttribute("aria-disabled", "true");
+    link.setAttribute("tabindex", "-1");
   }
-
-  link.classList.add(
-    "account-card-action-disabled"
-  );
-
-  link.setAttribute("aria-disabled", "true");
-  link.setAttribute("tabindex", "-1");
 }
 
 
 function handleLockedScannerClick(event) {
   const link = event.currentTarget;
 
-  if (
-    link.getAttribute("aria-disabled") !== "true"
-  ) {
+  if (link.getAttribute("aria-disabled") !== "true") {
     return;
   }
 
   event.preventDefault();
 
   showAccountMessage(
-    "This scanner requires an active membership.",
-    "error"
+    "This tool requires an active membership with access."
   );
+}
+
+
+function renderUpgradeButtons(membershipPlan) {
+  const normalizedPlan = String(
+    membershipPlan || "free"
+  ).toLowerCase();
+
+  if (upgradeTrader) {
+    upgradeTrader.hidden = ![
+      "free",
+      "starter",
+    ].includes(normalizedPlan);
+  }
+
+  if (upgradeProfessional) {
+    upgradeProfessional.hidden =
+      normalizedPlan === "professional";
+  }
 }
 
 
 function renderUser(user) {
   const email = user.email || "Unavailable";
   const accountIsActive = Boolean(user.is_active);
-
-  const status = accountIsActive
-    ? "Active"
-    : "Inactive";
-
   const membershipStatus =
     user.membership_status || "inactive";
-
   const membershipPlan =
     user.membership_plan || "free";
-
-  const hasQqqAccess =
-    accountIsActive &&
-    Boolean(user.qqq_access);
-
-  const hasSpyAccess =
-    accountIsActive &&
-    Boolean(user.spy_access);
+  const allowedTools = Array.isArray(user.allowed_tools)
+    ? user.allowed_tools
+    : [];
 
   if (accountEmail) {
     accountEmail.textContent = email;
   }
 
   if (accountStatus) {
-    accountStatus.textContent =
-      membershipStatus === "active"
-        ? "Active member"
-        : "Inactive membership";
+    const hasActiveMembership =
+      membershipStatus === "active";
 
-    accountStatus.dataset.status =
-      membershipStatus === "active"
-        ? "active"
-        : "inactive";
+    accountStatus.textContent = hasActiveMembership
+      ? "Active membership"
+      : "Inactive membership";
+
+    accountStatus.dataset.status = hasActiveMembership
+      ? "active"
+      : "inactive";
   }
 
   if (profileEmail) {
@@ -205,7 +196,9 @@ function renderUser(user) {
   }
 
   if (profileStatus) {
-    profileStatus.textContent = status;
+    profileStatus.textContent = accountIsActive
+      ? "Active"
+      : "Inactive";
   }
 
   if (profileCreatedAt) {
@@ -214,30 +207,57 @@ function renderUser(user) {
   }
 
   renderScannerAccess({
-    hasAccess: hasQqqAccess,
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes("qqq-live-chart"),
     badge: qqqAccessBadge,
     link: qqqAccessLink,
   });
 
   renderScannerAccess({
-    hasAccess: hasSpyAccess,
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes("spy-live-chart"),
     badge: spyAccessBadge,
     link: spyAccessLink,
   });
 
   if (subscriptionBadge) {
-    const planLabel =
-      formatMembershipLabel(membershipPlan);
-
-    const statusLabel =
-      formatMembershipLabel(membershipStatus);
-
     subscriptionBadge.textContent =
-      `${planLabel} · ${statusLabel}`;
+      `${formatMembershipLabel(membershipPlan)} · ` +
+      `${formatMembershipLabel(membershipStatus)}`;
 
     subscriptionBadge.dataset.status =
       membershipStatus;
   }
+
+  if (subscriptionPlan) {
+    subscriptionPlan.textContent =
+      formatMembershipLabel(membershipPlan);
+  }
+
+  if (subscriptionStatus) {
+    subscriptionStatus.textContent =
+      formatMembershipLabel(membershipStatus);
+  }
+
+  if (manageSubscription) {
+    const hasStripeCustomer =
+      membershipPlan !== "free";
+
+    manageSubscription.disabled = !hasStripeCustomer;
+
+    manageSubscription.classList.toggle(
+      "account-card-action-disabled",
+      !hasStripeCustomer
+    );
+
+    manageSubscription.title = hasStripeCustomer
+      ? ""
+      : "No Stripe billing account is connected.";
+  }
+
+  renderUpgradeButtons(membershipPlan);
 }
 
 
@@ -254,16 +274,14 @@ function showAccountPage() {
 
 async function loadAccount() {
   try {
-    const response = await fetch(
-      "/api/auth/me",
-      {
-        method: "GET",
-        credentials: "same-origin",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
+    const response = await fetch("/api/auth/me", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
     const data = await getResponseData(response);
 
@@ -281,10 +299,7 @@ async function loadAccount() {
     renderUser(data.user);
     showAccountPage();
   } catch (error) {
-    console.error(
-      "Account loading failed:",
-      error
-    );
+    console.error("Account loading failed:", error);
 
     showAccountPage();
 
@@ -295,19 +310,20 @@ async function loadAccount() {
 }
 
 
-async function logout() {
-  if (!logoutButton) {
-    return;
-  }
-
-  logoutButton.disabled = true;
-  logoutButton.textContent = "Logging out...";
+async function openBillingPortal() {
+  if (!manageSubscription) return;
 
   showAccountMessage("");
 
+  setButtonLoading(
+    manageSubscription,
+    true,
+    "Opening Portal..."
+  );
+
   try {
     const response = await fetch(
-      "/api/auth/logout",
+      "/api/stripe/create-portal-session",
       {
         method: "POST",
         credentials: "same-origin",
@@ -317,57 +333,146 @@ async function logout() {
       }
     );
 
-    if (!response.ok) {
-      const data =
-        await getResponseData(response);
+    const data = await getResponseData(response);
 
+    if (response.status === 401) {
+      redirectToLogin();
+      return;
+    }
+
+    if (!response.ok || !data.portal_url) {
       throw new Error(
-        data.detail || "Unable to log out."
+        data.detail ||
+          "Unable to open subscription management."
       );
     }
 
-    window.location.replace("/login");
+    window.location.href = data.portal_url;
   } catch (error) {
-    console.error("Logout failed:", error);
-
-    showAccountMessage(
-      "Unable to log out. Please try again."
+    console.error(
+      "Billing portal failed:",
+      error
     );
 
-    logoutButton.disabled = false;
-    logoutButton.textContent = "Log Out";
+    showAccountMessage(
+      error.message ||
+        "Unable to open subscription management."
+    );
+
+    setButtonLoading(
+      manageSubscription,
+      false,
+      ""
+    );
   }
 }
 
 
-if (qqqAccessLink) {
-  qqqAccessLink.addEventListener(
-    "click",
-    handleLockedScannerClick
+async function changeSubscription(plan, button) {
+  if (!button) return;
+
+  showAccountMessage("");
+
+  setButtonLoading(
+    button,
+    true,
+    "Updating..."
   );
+
+  try {
+    const response = await fetch(
+      "/api/stripe/change-subscription",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          plan,
+        }),
+      }
+    );
+
+    const data = await getResponseData(response);
+
+    if (response.status === 401) {
+      redirectToLogin();
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail ||
+          "Unable to update your subscription."
+      );
+    }
+
+    showAccountMessage(
+      `Your membership was updated to ${formatMembershipLabel(plan)}.`,
+      "success"
+    );
+
+    await loadAccount();
+  } catch (error) {
+    console.error(
+      "Subscription update failed:",
+      error
+    );
+
+    showAccountMessage(
+      error.message ||
+        "Unable to update your subscription."
+    );
+  } finally {
+    setButtonLoading(
+      button,
+      false,
+      ""
+    );
+  }
 }
 
 
-if (spyAccessLink) {
-  spyAccessLink.addEventListener(
-    "click",
-    handleLockedScannerClick
-  );
-}
+qqqAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
 
+spyAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
 
-if (logoutButton) {
-  logoutButton.addEventListener(
-    "click",
-    logout
-  );
-}
+manageSubscription?.addEventListener(
+  "click",
+  openBillingPortal
+);
 
+upgradeTrader?.addEventListener(
+  "click",
+  () => {
+    changeSubscription(
+      "trader",
+      upgradeTrader
+    );
+  }
+);
+
+upgradeProfessional?.addEventListener(
+  "click",
+  () => {
+    changeSubscription(
+      "professional",
+      upgradeProfessional
+    );
+  }
+);
 
 if (accountYear) {
   accountYear.textContent =
     String(new Date().getFullYear());
 }
-
 
 loadAccount();
