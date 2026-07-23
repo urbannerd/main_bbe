@@ -11,4 +11,4 @@ pydantic
 pydantic-settings
 stripe
 httpx
-requests
+requestsalembic==1.18.5
