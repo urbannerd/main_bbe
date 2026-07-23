@@ -118,6 +118,7 @@ if (registerForm) {
           "Content-Type": "application/json",
         },
         credentials: "same-origin",
+        cache: "no-store",
         body: JSON.stringify({
           email,
           password,
@@ -179,6 +180,7 @@ if (loginForm) {
           "Content-Type": "application/json",
         },
         credentials: "same-origin",
+        cache: "no-store",
         body: JSON.stringify({
           email,
           password,
@@ -200,7 +202,15 @@ if (loginForm) {
       );
 
       window.setTimeout(() => {
-        window.location.href = "/account";
+        const params = new URLSearchParams(window.location.search);
+        const requestedNext = params.get("next");
+        const safeNext =
+          requestedNext &&
+          requestedNext.startsWith("/") &&
+          !requestedNext.startsWith("//")
+            ? requestedNext
+            : "/account";
+        window.location.replace(safeNext);
       }, 600);
     } catch (error) {
       console.error("Login failed:", error);

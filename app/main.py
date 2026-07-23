@@ -1,18 +1,24 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+
+load_dotenv()
+
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
 
 from app import models  # noqa: F401
-from app.database import Base, engine
-from app.routes.auth import router as auth_router
+from app.database import Base, engine, get_db
+from app.routes.auth import (
+    require_current_user,
+    require_tool_access,
+    router as auth_router,
+)
 from app.routes.preview import router as preview_router
-
-
-load_dotenv()
+from app.routes.stripe_routes import router as stripe_router
 
 SESSION_SECRET = os.getenv("SESSION_SECRET")
 APP_ENV = os.getenv("APP_ENV", "development").lower()
@@ -35,19 +41,26 @@ app = FastAPI(
 )
 
 
+session_options = {
+    "secret_key": SESSION_SECRET,
+    "session_cookie": "bbe_session",
+    "max_age": 60 * 60 * 24,
+    "same_site": "lax",
+    "https_only": IS_PRODUCTION,
+}
+
+if IS_PRODUCTION:
+    session_options["domain"] = ".bagbuildersexchange.com"
+
 app.add_middleware(
     SessionMiddleware,
-    secret_key=SESSION_SECRET,
-    session_cookie="bbe_session",
-    max_age=60 * 60 * 24,
-    same_site="lax",
-    https_only=IS_PRODUCTION,
-    domain=".bagbuildersexchange.com",   # <-- add this
+    **session_options,
 )
 
 
 app.include_router(preview_router, prefix="/api")
 app.include_router(auth_router)
+app.include_router(stripe_router)
 
 
 app.mount(
@@ -76,13 +89,25 @@ def landing_page():
 
 @app.get("/qqq")
 @app.get("/qqq/")
-def qqq_page():
+def qqq_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "qqq-live-chart")
+
     return FileResponse("static/qqq/index.html")
 
 
 @app.get("/spy")
 @app.get("/spy/")
-def spy_page():
+def spy_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "spy-live-chart")
+
     return FileResponse("static/spy/index.html")
 
 

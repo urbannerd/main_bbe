@@ -66,11 +66,25 @@ class User(Base):
     )
 
     stripe_customer_id = Column(
-        String(255),
+        String,
+        unique=True,
         nullable=True,
+        index=True,
     )
 
     stripe_subscription_id = Column(
-        String(255),
+        String,
+        unique=True,
+        nullable=True,
+        index=True,
+    )
+
+    stripe_price_id = Column(
+        String,
+        nullable=True,
+    )
+
+    stripe_subscription_status = Column(
+        String,
         nullable=True,
     )

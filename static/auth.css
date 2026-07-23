@@ -128,30 +128,47 @@ body {
 
 .auth-button {
   width: 100%;
-  min-height: 48px;
-  padding: 13px 18px;
-  border: 1px solid rgba(255, 204, 60, 0.55);
-  border-radius: 12px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 204, 60, 0.22),
-      rgba(214, 162, 26, 0.15)
-    );
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(214, 162, 26, 0.45);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 204, 60, 0.18),
+    rgba(214, 162, 26, 0.12)
+  );
   color: var(--text);
   font: inherit;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
   cursor: pointer;
+  box-shadow: 0 14px 40px rgba(214, 162, 26, 0.12);
   transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
 }
 
 .auth-button:hover {
   transform: translateY(-1px);
-  border-color: var(--gold-light);
-  box-shadow: 0 14px 34px rgba(214, 162, 26, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 204, 60, 0.65);
+}
+
+.auth-button:focus-visible {
+  outline: 3px solid rgba(255, 204, 60, 0.28);
+  outline-offset: 3px;
+}
+
+.auth-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
 }
 
 .auth-card a {
@@ -353,19 +370,32 @@ body {
 
 .account-logout-button {
   min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 9px 15px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  background: transparent;
   color: var(--text);
   font: inherit;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
   cursor: pointer;
+  box-shadow: none;
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
 }
 
 .account-logout-button:hover {
-  border-color: rgba(255, 204, 60, 0.55);
-  color: var(--gold-light);
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text);
 }
 
 .account-logout-button:disabled {
@@ -535,25 +565,39 @@ body {
 
 .account-card-action,
 .account-support-link {
+  min-height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 10px 15px;
-  border: 1px solid rgba(255, 204, 60, 0.45);
-  border-radius: 10px;
-  background: rgba(214, 162, 26, 0.09);
-  color: var(--gold-light);
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(214, 162, 26, 0.45);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 204, 60, 0.18),
+    rgba(214, 162, 26, 0.12)
+  );
+  color: var(--text);
   text-decoration: none;
   font: inherit;
-  font-weight: 850;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
   cursor: pointer;
+  box-shadow: 0 14px 40px rgba(214, 162, 26, 0.12);
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
 }
 
 .account-card-action:hover,
 .account-support-link:hover {
-  border-color: var(--gold-light);
-  background: rgba(214, 162, 26, 0.14);
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 204, 60, 0.65);
+  color: var(--text);
 }
 
 .account-card-action-disabled {
@@ -703,5 +747,58 @@ body {
     padding: 22px 0;
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* Subscription management */
+.subscription-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0 0;
+}
+
+.subscription-summary > div {
+  padding: 15px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.subscription-summary span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.subscription-summary strong {
+  display: block;
+  font-size: 1.08rem;
+}
+
+.subscription-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.subscription-actions .account-card-action {
+  width: 100%;
+}
+
+.subscription-actions .account-card-action:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+
+@media (max-width: 620px) {
+  .subscription-summary,
+  .subscription-actions {
+    grid-template-columns: 1fr;
   }
 }
