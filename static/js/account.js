@@ -22,6 +22,21 @@ const subscriptionPlan =
 const subscriptionStatus =
   document.getElementById("subscription-status");
 
+const subscriptionRenewalItem =
+  document.getElementById("subscription-renewal-item");
+
+const subscriptionRenewalLabel =
+  document.getElementById("subscription-renewal-label");
+
+const subscriptionRenewalDate =
+  document.getElementById("subscription-renewal-date");
+
+const subscriptionCancellationNotice =
+  document.getElementById("subscription-cancellation-notice");
+
+const subscriptionCancellationCopy =
+  document.getElementById("subscription-cancellation-copy");
+
 const manageSubscription =
   document.getElementById("manage-subscription");
 
@@ -76,38 +91,92 @@ function formatDate(value) {
 }
 
 
+function formatBillingDate(value) {
+  if (!value) return "Unavailable";
+
+  let normalizedValue = value;
+
+  if (
+    typeof value === "string" &&
+    /^\d+$/.test(value)
+  ) {
+    normalizedValue = Number(value);
+  }
+
+  if (
+    typeof normalizedValue === "number" &&
+    normalizedValue < 1000000000000
+  ) {
+    normalizedValue *= 1000;
+  }
+
+  const date = new Date(normalizedValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unavailable";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
+
 function formatMembershipLabel(value) {
   if (!value) return "Free";
 
   return String(value)
     .replaceAll("_", " ")
     .replaceAll("-", " ")
-    .replace(/\b\w/g, (character) => character.toUpperCase());
+    .replace(/\b\w/g, (character) =>
+      character.toUpperCase()
+    );
 }
 
 
-function setButtonLoading(button, isLoading, loadingText) {
+function setButtonLoading(
+  button,
+  isLoading,
+  loadingText = "Please wait..."
+) {
   if (!button) return;
 
   if (isLoading) {
-    button.dataset.originalText = button.textContent;
+    if (!button.dataset.originalText) {
+      button.dataset.originalText =
+        button.textContent;
+    }
+
     button.textContent = loadingText;
     button.disabled = true;
     return;
   }
 
   button.textContent =
-    button.dataset.originalText || button.textContent;
+    button.dataset.originalText ||
+    button.textContent;
 
   button.disabled = false;
+
   delete button.dataset.originalText;
 }
 
 
-function renderScannerAccess({ hasAccess, badge, link }) {
+function renderScannerAccess({
+  hasAccess,
+  badge,
+  link,
+}) {
   if (badge) {
-    badge.textContent = hasAccess ? "Included" : "Locked";
-    badge.dataset.access = hasAccess ? "included" : "locked";
+    badge.textContent = hasAccess
+      ? "Included"
+      : "Locked";
+
+    badge.dataset.access = hasAccess
+      ? "included"
+      : "locked";
 
     badge.classList.toggle(
       "account-card-badge-muted",
@@ -118,13 +187,26 @@ function renderScannerAccess({ hasAccess, badge, link }) {
   if (!link) return;
 
   if (hasAccess) {
-    link.classList.remove("account-card-action-disabled");
+    link.classList.remove(
+      "account-card-action-disabled"
+    );
+
     link.removeAttribute("aria-disabled");
     link.removeAttribute("tabindex");
   } else {
-    link.classList.add("account-card-action-disabled");
-    link.setAttribute("aria-disabled", "true");
-    link.setAttribute("tabindex", "-1");
+    link.classList.add(
+      "account-card-action-disabled"
+    );
+
+    link.setAttribute(
+      "aria-disabled",
+      "true"
+    );
+
+    link.setAttribute(
+      "tabindex",
+      "-1"
+    );
   }
 }
 
@@ -132,7 +214,10 @@ function renderScannerAccess({ hasAccess, badge, link }) {
 function handleLockedScannerClick(event) {
   const link = event.currentTarget;
 
-  if (link.getAttribute("aria-disabled") !== "true") {
+  if (
+    link.getAttribute("aria-disabled") !==
+    "true"
+  ) {
     return;
   }
 
@@ -163,16 +248,130 @@ function renderUpgradeButtons(membershipPlan) {
 }
 
 
+function renderSubscriptionDetails({
+  membershipPlan,
+  membershipStatus,
+  cancelAtPeriodEnd,
+  currentPeriodEnd,
+}) {
+  const formattedPlan =
+    formatMembershipLabel(membershipPlan);
+
+  const formattedStatus =
+    formatMembershipLabel(membershipStatus);
+
+  const formattedPeriodEnd =
+    formatBillingDate(currentPeriodEnd);
+
+  if (subscriptionBadge) {
+    subscriptionBadge.textContent =
+      `${formattedPlan} · ${formattedStatus}`;
+
+    subscriptionBadge.dataset.status =
+      membershipStatus;
+  }
+
+  if (subscriptionPlan) {
+    subscriptionPlan.textContent =
+      formattedPlan;
+  }
+
+  if (subscriptionStatus) {
+    if (
+      cancelAtPeriodEnd &&
+      membershipStatus === "active"
+    ) {
+      subscriptionStatus.textContent =
+        "Active — Cancels at period end";
+    } else {
+      subscriptionStatus.textContent =
+        formattedStatus;
+    }
+  }
+
+  const isPaidPlan =
+    String(membershipPlan).toLowerCase() !==
+    "free";
+
+  const hasValidPeriodEnd =
+    currentPeriodEnd &&
+    formattedPeriodEnd !== "Unavailable";
+
+  if (subscriptionRenewalItem) {
+    subscriptionRenewalItem.hidden =
+      !isPaidPlan || !hasValidPeriodEnd;
+  }
+
+  if (
+    subscriptionRenewalLabel &&
+    isPaidPlan &&
+    hasValidPeriodEnd
+  ) {
+    subscriptionRenewalLabel.textContent =
+      cancelAtPeriodEnd
+        ? "Access Until"
+        : "Renews On";
+  }
+
+  if (
+    subscriptionRenewalDate &&
+    isPaidPlan &&
+    hasValidPeriodEnd
+  ) {
+    subscriptionRenewalDate.textContent =
+      formattedPeriodEnd;
+  }
+
+  const shouldShowCancellationNotice =
+    cancelAtPeriodEnd &&
+    membershipStatus === "active" &&
+    isPaidPlan &&
+    hasValidPeriodEnd;
+
+  if (subscriptionCancellationNotice) {
+    subscriptionCancellationNotice.hidden =
+      !shouldShowCancellationNotice;
+  }
+
+  if (subscriptionCancellationCopy) {
+    subscriptionCancellationCopy.textContent =
+      shouldShowCancellationNotice
+        ? ` Your ${formattedPlan} access remains active through ${formattedPeriodEnd}. You can resume your subscription from the billing portal before that date.`
+        : "";
+  }
+}
+
+
 function renderUser(user) {
-  const email = user.email || "Unavailable";
-  const accountIsActive = Boolean(user.is_active);
-  const membershipStatus =
-    user.membership_status || "inactive";
-  const membershipPlan =
-    user.membership_plan || "free";
-  const allowedTools = Array.isArray(user.allowed_tools)
-    ? user.allowed_tools
-    : [];
+  const email =
+    user.email || "Unavailable";
+
+  const accountIsActive =
+    Boolean(user.is_active);
+
+  const membershipStatus = String(
+    user.membership_status || "inactive"
+  ).toLowerCase();
+
+  const membershipPlan = String(
+    user.membership_plan || "free"
+  ).toLowerCase();
+
+  const allowedTools =
+    Array.isArray(user.allowed_tools)
+      ? user.allowed_tools
+      : [];
+
+  const cancelAtPeriodEnd =
+    user.cancel_at_period_end === true ||
+    user.cancel_at_period_end === 1 ||
+    user.cancel_at_period_end === "true";
+
+  const currentPeriodEnd =
+    user.current_period_end ||
+    user.subscription_period_end ||
+    user.cancel_at ||
+    null;
 
   if (accountEmail) {
     accountEmail.textContent = email;
@@ -180,15 +379,27 @@ function renderUser(user) {
 
   if (accountStatus) {
     const hasActiveMembership =
-      membershipStatus === "active";
+      membershipStatus === "active" ||
+      membershipStatus === "trialing";
 
-    accountStatus.textContent = hasActiveMembership
-      ? "Active membership"
-      : "Inactive membership";
+    if (
+      hasActiveMembership &&
+      cancelAtPeriodEnd
+    ) {
+      accountStatus.textContent =
+        "Cancels at period end";
+    } else if (hasActiveMembership) {
+      accountStatus.textContent =
+        "Active membership";
+    } else {
+      accountStatus.textContent =
+        "Inactive membership";
+    }
 
-    accountStatus.dataset.status = hasActiveMembership
-      ? "active"
-      : "inactive";
+    accountStatus.dataset.status =
+      hasActiveMembership
+        ? "active"
+        : "inactive";
   }
 
   if (profileEmail) {
@@ -196,9 +407,10 @@ function renderUser(user) {
   }
 
   if (profileStatus) {
-    profileStatus.textContent = accountIsActive
-      ? "Active"
-      : "Inactive";
+    profileStatus.textContent =
+      accountIsActive
+        ? "Active"
+        : "Inactive";
   }
 
   if (profileCreatedAt) {
@@ -209,7 +421,9 @@ function renderUser(user) {
   renderScannerAccess({
     hasAccess:
       accountIsActive &&
-      allowedTools.includes("qqq-live-chart"),
+      allowedTools.includes(
+        "qqq-live-chart"
+      ),
     badge: qqqAccessBadge,
     link: qqqAccessLink,
   });
@@ -217,44 +431,37 @@ function renderUser(user) {
   renderScannerAccess({
     hasAccess:
       accountIsActive &&
-      allowedTools.includes("spy-live-chart"),
+      allowedTools.includes(
+        "spy-live-chart"
+      ),
     badge: spyAccessBadge,
     link: spyAccessLink,
   });
 
-  if (subscriptionBadge) {
-    subscriptionBadge.textContent =
-      `${formatMembershipLabel(membershipPlan)} · ` +
-      `${formatMembershipLabel(membershipStatus)}`;
-
-    subscriptionBadge.dataset.status =
-      membershipStatus;
-  }
-
-  if (subscriptionPlan) {
-    subscriptionPlan.textContent =
-      formatMembershipLabel(membershipPlan);
-  }
-
-  if (subscriptionStatus) {
-    subscriptionStatus.textContent =
-      formatMembershipLabel(membershipStatus);
-  }
+  renderSubscriptionDetails({
+    membershipPlan,
+    membershipStatus,
+    cancelAtPeriodEnd,
+    currentPeriodEnd,
+  });
 
   if (manageSubscription) {
     const hasStripeCustomer =
-      membershipPlan !== "free";
+      membershipPlan !== "free" ||
+      Boolean(user.stripe_customer_id);
 
-    manageSubscription.disabled = !hasStripeCustomer;
+    manageSubscription.disabled =
+      !hasStripeCustomer;
 
     manageSubscription.classList.toggle(
       "account-card-action-disabled",
       !hasStripeCustomer
     );
 
-    manageSubscription.title = hasStripeCustomer
-      ? ""
-      : "No Stripe billing account is connected.";
+    manageSubscription.title =
+      hasStripeCustomer
+        ? ""
+        : "No Stripe billing account is connected.";
   }
 
   renderUpgradeButtons(membershipPlan);
@@ -274,32 +481,43 @@ function showAccountPage() {
 
 async function loadAccount() {
   try {
-    const response = await fetch("/api/auth/me", {
-      method: "GET",
-      credentials: "same-origin",
-      cache: "no-store",
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    const response = await fetch(
+      "/api/auth/me",
+      {
+        method: "GET",
+        credentials: "same-origin",
+        cache: "no-store",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
 
-    const data = await getResponseData(response);
+    const data =
+      await getResponseData(response);
 
     if (response.status === 401) {
       redirectToLogin();
       return;
     }
 
-    if (!response.ok || !data.user) {
+    if (
+      !response.ok ||
+      !data.user
+    ) {
       throw new Error(
-        data.detail || "Unable to load account."
+        data.detail ||
+        "Unable to load account."
       );
     }
 
     renderUser(data.user);
     showAccountPage();
   } catch (error) {
-    console.error("Account loading failed:", error);
+    console.error(
+      "Account loading failed:",
+      error
+    );
 
     showAccountPage();
 
@@ -333,21 +551,26 @@ async function openBillingPortal() {
       }
     );
 
-    const data = await getResponseData(response);
+    const data =
+      await getResponseData(response);
 
     if (response.status === 401) {
       redirectToLogin();
       return;
     }
 
-    if (!response.ok || !data.portal_url) {
+    if (
+      !response.ok ||
+      !data.portal_url
+    ) {
       throw new Error(
         data.detail ||
-          "Unable to open subscription management."
+        "Unable to open subscription management."
       );
     }
 
-    window.location.href = data.portal_url;
+    window.location.href =
+      data.portal_url;
   } catch (error) {
     console.error(
       "Billing portal failed:",
@@ -356,19 +579,21 @@ async function openBillingPortal() {
 
     showAccountMessage(
       error.message ||
-        "Unable to open subscription management."
+      "Unable to open subscription management."
     );
 
     setButtonLoading(
       manageSubscription,
-      false,
-      ""
+      false
     );
   }
 }
 
 
-async function changeSubscription(plan, button) {
+async function changeSubscription(
+  plan,
+  button
+) {
   if (!button) return;
 
   showAccountMessage("");
@@ -386,7 +611,8 @@ async function changeSubscription(plan, button) {
         method: "POST",
         credentials: "same-origin",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
@@ -395,7 +621,8 @@ async function changeSubscription(plan, button) {
       }
     );
 
-    const data = await getResponseData(response);
+    const data =
+      await getResponseData(response);
 
     if (response.status === 401) {
       redirectToLogin();
@@ -405,8 +632,19 @@ async function changeSubscription(plan, button) {
     if (!response.ok) {
       throw new Error(
         data.detail ||
-          "Unable to update your subscription."
+        "Unable to update your subscription."
       );
+    }
+
+    const checkoutUrl =
+      data.checkout_url ||
+      data.url ||
+      data.session_url;
+
+    if (checkoutUrl) {
+      window.location.href =
+        checkoutUrl;
+      return;
     }
 
     showAccountMessage(
@@ -423,13 +661,12 @@ async function changeSubscription(plan, button) {
 
     showAccountMessage(
       error.message ||
-        "Unable to update your subscription."
+      "Unable to update your subscription."
     );
   } finally {
     setButtonLoading(
       button,
-      false,
-      ""
+      false
     );
   }
 }
