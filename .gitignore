@@ -7,3 +7,5 @@ __pycache__/
 venv/
 *.db
 *.db-*
+*.db.backup-*
+*.save
