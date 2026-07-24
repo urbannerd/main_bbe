@@ -26,7 +26,7 @@
   >
 
   <script
-    src="/static/js/account.js?v=5"
+    src="/static/js/account.js?v=7"
     defer
 ></script>
 </head>
@@ -160,7 +160,7 @@
               </p>
 
               <h2>
-                QQQ Impulse Scanner
+                QQQ Live Chart
               </h2>
             </div>
 
@@ -194,7 +194,7 @@
               </p>
 
               <h2>
-                SPY Impulse Scanner
+                SPY Live Chart
               </h2>
             </div>
 
@@ -217,6 +217,138 @@
             class="account-card-action"
           >
             Open SPY Scanner
+          </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Board Scale
+              </p>
+
+              <h2>
+                QQQ Board Scale
+              </h2>
+            </div>
+
+            <span
+              id="qqq-board-scale-access-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <p>
+            Review QQQ market structure and Board Scale analysis.
+          </p>
+
+          <a
+            id="qqq-board-scale-access-link"
+            href="/qqq-board-scale"
+            class="account-card-action"
+          >
+            Open QQQ Board Scale
+          </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Board Scale
+              </p>
+
+              <h2>
+                SPY Board Scale
+              </h2>
+            </div>
+
+            <span
+              id="spy-board-scale-access-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <p>
+            Review SPY market structure and Board Scale analysis.
+          </p>
+
+          <a
+            id="spy-board-scale-access-link"
+            href="/spy-board-scale"
+            class="account-card-action"
+          >
+            Open SPY Board Scale
+          </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Professional Tool
+              </p>
+
+              <h2>
+                Impulse
+              </h2>
+            </div>
+
+            <span
+              id="impulse-access-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <p>
+            Access the proprietary Impulse analysis tool.
+          </p>
+
+          <a
+            id="impulse-access-link"
+            href="/impulse"
+            class="account-card-action"
+          >
+            Open Impulse
+          </a>
+        </article>
+
+        <article class="account-dashboard-card">
+          <div class="account-card-heading">
+            <div>
+              <p class="account-card-eyebrow">
+                Professional Tool
+              </p>
+
+              <h2>
+                Leap
+              </h2>
+            </div>
+
+            <span
+              id="leap-access-badge"
+              class="account-card-badge account-card-badge-muted"
+            >
+              Checking...
+            </span>
+          </div>
+
+          <p>
+            Access the proprietary Leap analysis tool.
+          </p>
+
+          <a
+            id="leap-access-link"
+            href="/leap"
+            class="account-card-action"
+          >
+            Open Leap
           </a>
         </article>
 
@@ -272,27 +404,58 @@
             or upgrade your membership plan.
           </p>
 
+          <div
+            id="payment-warning"
+            class="subscription-payment-warning"
+            role="alert"
+            hidden
+          >
+            Your latest payment was unsuccessful. Open billing
+            management to update your payment method.
+          </div>
+
           <div class="subscription-actions">
             <button
               id="manage-subscription"
               class="account-card-action"
               type="button"
+              hidden
             >
               Manage Subscription
             </button>
-
+          
+            <button
+              id="reactivate-subscription"
+              class="account-card-action"
+              type="button"
+              hidden
+            >
+              Reactivate Subscription
+            </button>
+          
+            <button
+              id="upgrade-starter"
+              class="account-card-action"
+              type="button"
+              hidden
+            >
+              Upgrade to Starter
+            </button>
+          
             <button
               id="upgrade-trader"
               class="account-card-action"
               type="button"
+              hidden
             >
               Upgrade to Trader
             </button>
-
+          
             <button
               id="upgrade-professional"
               class="account-card-action"
               type="button"
+              hidden
             >
               Upgrade to Professional
             </button>
@@ -322,7 +485,7 @@
             </div>
 
             <div>
-              <dt>Status</dt>
+              <dt>Membership Status</dt>
 
               <dd id="profile-status">
                 Loading...

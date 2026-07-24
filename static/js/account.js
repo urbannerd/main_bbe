@@ -13,6 +13,46 @@ const qqqAccessLink = document.getElementById("qqq-access-link");
 const spyAccessBadge = document.getElementById("spy-access-badge");
 const spyAccessLink = document.getElementById("spy-access-link");
 
+const qqqBoardScaleAccessBadge =
+  document.getElementById(
+    "qqq-board-scale-access-badge"
+  );
+
+const qqqBoardScaleAccessLink =
+  document.getElementById(
+    "qqq-board-scale-access-link"
+  );
+
+const spyBoardScaleAccessBadge =
+  document.getElementById(
+    "spy-board-scale-access-badge"
+  );
+
+const spyBoardScaleAccessLink =
+  document.getElementById(
+    "spy-board-scale-access-link"
+  );
+
+const impulseAccessBadge =
+  document.getElementById(
+    "impulse-access-badge"
+  );
+
+const impulseAccessLink =
+  document.getElementById(
+    "impulse-access-link"
+  );
+
+const leapAccessBadge =
+  document.getElementById(
+    "leap-access-badge"
+  );
+
+const leapAccessLink =
+  document.getElementById(
+    "leap-access-link"
+  );
+
 const subscriptionBadge =
   document.getElementById("subscription-badge");
 
@@ -46,6 +86,14 @@ const upgradeTrader =
 const upgradeProfessional =
   document.getElementById("upgrade-professional");
 
+const upgradeStarter =
+  document.getElementById("upgrade-starter");
+
+const reactivateSubscription =
+  document.getElementById("reactivate-subscription");
+
+const paymentWarning =
+  document.getElementById("payment-warning");
 
 function showAccountMessage(message, type = "error") {
   if (!accountMessage) return;
@@ -229,24 +277,217 @@ function handleLockedScannerClick(event) {
 }
 
 
-function renderUpgradeButtons(membershipPlan) {
-  const normalizedPlan = String(
-    membershipPlan || "free"
-  ).toLowerCase();
+function normalizeMembershipPlan(plan) {
+  const value = String(
+    plan || "free"
+  ).trim().toLowerCase();
 
-  if (upgradeTrader) {
-    upgradeTrader.hidden = ![
-      "free",
-      "starter",
-    ].includes(normalizedPlan);
-  }
+  const aliases = {
+    basic: "free",
+    starter_plan: "starter",
+    trader_plan: "trader",
+    professional_plan: "professional",
+    pro: "professional",
+  };
 
-  if (upgradeProfessional) {
-    upgradeProfessional.hidden =
-      normalizedPlan === "professional";
-  }
+  return aliases[value] || value;
 }
 
+
+function normalizeMembershipStatus(status) {
+  return String(
+    status || "inactive"
+  ).trim().toLowerCase();
+}
+
+
+function isActiveMembership(status) {
+  return [
+    "active",
+    "trialing",
+  ].includes(status);
+}
+
+
+function renderSubscriptionActions(user) {
+  const plan = normalizeMembershipPlan(
+    user.membership_plan
+  );
+
+  const status = normalizeMembershipStatus(
+    user.membership_status ||
+    user.stripe_subscription_status
+  );
+
+  const buttons = [
+    upgradeStarter,
+    upgradeTrader,
+    upgradeProfessional,
+    manageSubscription,
+    reactivateSubscription,
+  ];
+
+  /*
+   * Reset every subscription action before deciding
+   * which controls should be visible.
+   */
+  buttons.forEach((button) => {
+    if (button) {
+      button.hidden = true;
+    }
+  });
+
+  if (paymentWarning) {
+    paymentWarning.hidden = true;
+  }
+
+  /*
+   * Cancelled or inactive users may still have an old
+   * paid membership_plan stored in the database.
+   */
+  const inactiveStatuses = [
+    "cancelled",
+    "canceled",
+    "inactive",
+    "unpaid",
+    "incomplete",
+    "incomplete_expired",
+  ];
+
+  if (inactiveStatuses.includes(status)) {
+    const hasStripeCustomer =
+      Boolean(user.stripe_customer_id);
+  
+    /*
+     * A free user without a Stripe customer is a new/free
+     * member, not a cancelled subscriber.
+     */
+    if (plan === "free" && !hasStripeCustomer) {
+      if (upgradeStarter) {
+        upgradeStarter.hidden = false;
+      }
+  
+      if (upgradeTrader) {
+        upgradeTrader.hidden = false;
+      }
+  
+      if (upgradeProfessional) {
+        upgradeProfessional.hidden = false;
+      }
+  
+      return;
+    }
+  
+    /*
+     * A user with an existing Stripe billing account can
+     * reopen the portal to reactivate or resubscribe.
+     */
+    if (
+      reactivateSubscription &&
+      hasStripeCustomer
+    ) {
+      reactivateSubscription.hidden = false;
+      return;
+    }
+  
+    /*
+     * Fallback when no Stripe customer exists.
+     */
+    if (upgradeStarter) {
+      upgradeStarter.hidden = false;
+    }
+  
+    if (upgradeTrader) {
+      upgradeTrader.hidden = false;
+    }
+  
+    if (upgradeProfessional) {
+      upgradeProfessional.hidden = false;
+    }
+  
+    return;
+  }
+
+  if (status === "past_due") {
+    if (manageSubscription) {
+      manageSubscription.hidden = false;
+    }
+
+    if (paymentWarning) {
+      paymentWarning.hidden = false;
+    }
+
+    return;
+  }
+
+  if (!isActiveMembership(status)) {
+    if (reactivateSubscription) {
+      reactivateSubscription.hidden = false;
+    }
+
+    return;
+  }
+
+  switch (plan) {
+    case "free":
+      if (upgradeStarter) {
+        upgradeStarter.hidden = false;
+      }
+
+      if (upgradeTrader) {
+        upgradeTrader.hidden = false;
+      }
+
+      if (upgradeProfessional) {
+        upgradeProfessional.hidden = false;
+      }
+
+      break;
+
+    case "starter":
+      if (manageSubscription) {
+        manageSubscription.hidden = false;
+      }
+
+      if (upgradeTrader) {
+        upgradeTrader.hidden = false;
+      }
+
+      if (upgradeProfessional) {
+        upgradeProfessional.hidden = false;
+      }
+
+      break;
+
+    case "trader":
+      if (manageSubscription) {
+        manageSubscription.hidden = false;
+      }
+
+      if (upgradeProfessional) {
+        upgradeProfessional.hidden = false;
+      }
+
+      break;
+
+    case "professional":
+      if (manageSubscription) {
+        manageSubscription.hidden = false;
+      }
+
+      break;
+
+    default:
+      console.warn(
+        "Unknown membership plan:",
+        plan
+      );
+
+      if (reactivateSubscription) {
+        reactivateSubscription.hidden = false;
+      }
+  }
+}
 
 function renderSubscriptionDetails({
   membershipPlan,
@@ -407,10 +648,19 @@ function renderUser(user) {
   }
 
   if (profileStatus) {
+    const hasActiveMembership =
+      membershipStatus === "active" ||
+      membershipStatus === "trialing";
+  
     profileStatus.textContent =
-      accountIsActive
-        ? "Active"
-        : "Inactive";
+      hasActiveMembership
+        ? "Active Membership"
+        : "Inactive Membership";
+  
+    profileStatus.dataset.status =
+      hasActiveMembership
+        ? "active"
+        : "inactive";
   }
 
   if (profileCreatedAt) {
@@ -438,6 +688,46 @@ function renderUser(user) {
     link: spyAccessLink,
   });
 
+  renderScannerAccess({
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes(
+        "qqq-board-scale"
+      ),
+    badge: qqqBoardScaleAccessBadge,
+    link: qqqBoardScaleAccessLink,
+  });
+  
+  renderScannerAccess({
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes(
+        "spy-board-scale"
+      ),
+    badge: spyBoardScaleAccessBadge,
+    link: spyBoardScaleAccessLink,
+  });
+  
+  renderScannerAccess({
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes(
+        "impulse"
+      ),
+    badge: impulseAccessBadge,
+    link: impulseAccessLink,
+  });
+  
+  renderScannerAccess({
+    hasAccess:
+      accountIsActive &&
+      allowedTools.includes(
+        "leap"
+      ),
+    badge: leapAccessBadge,
+    link: leapAccessLink,
+  });
+
   renderSubscriptionDetails({
     membershipPlan,
     membershipStatus,
@@ -447,7 +737,6 @@ function renderUser(user) {
 
   if (manageSubscription) {
     const hasStripeCustomer =
-      membershipPlan !== "free" ||
       Boolean(user.stripe_customer_id);
 
     manageSubscription.disabled =
@@ -464,7 +753,7 @@ function renderUser(user) {
         : "No Stripe billing account is connected.";
   }
 
-  renderUpgradeButtons(membershipPlan);
+  renderSubscriptionActions(user);
 }
 
 
@@ -528,13 +817,15 @@ async function loadAccount() {
 }
 
 
-async function openBillingPortal() {
-  if (!manageSubscription) return;
+async function openBillingPortal(
+  button = manageSubscription
+) {
+  if (!button) return;
 
   showAccountMessage("");
 
   setButtonLoading(
-    manageSubscription,
+    button,
     true,
     "Opening Portal..."
   );
@@ -583,7 +874,7 @@ async function openBillingPortal() {
     );
 
     setButtonLoading(
-      manageSubscription,
+      button,
       false
     );
   }
@@ -682,9 +973,38 @@ spyAccessLink?.addEventListener(
   handleLockedScannerClick
 );
 
+qqqBoardScaleAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
+
+spyBoardScaleAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
+
+impulseAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
+
+leapAccessLink?.addEventListener(
+  "click",
+  handleLockedScannerClick
+);
+
 manageSubscription?.addEventListener(
   "click",
-  openBillingPortal
+  () => openBillingPortal(
+    manageSubscription
+  )
+);
+
+reactivateSubscription?.addEventListener(
+  "click",
+  () => openBillingPortal(
+    reactivateSubscription
+  )
 );
 
 upgradeTrader?.addEventListener(
@@ -703,6 +1023,16 @@ upgradeProfessional?.addEventListener(
     changeSubscription(
       "professional",
       upgradeProfessional
+    );
+  }
+);
+
+upgradeStarter?.addEventListener(
+  "click",
+  () => {
+    changeSubscription(
+      "starter",
+      upgradeStarter
     );
   }
 );
