@@ -96,6 +96,12 @@ def serialize_user(user: User) -> dict:
         "created_at": user.created_at,
         "membership_status": user.membership_status,
         "membership_plan": plan,
+
+        "stripe_customer_id": user.stripe_customer_id,
+        "stripe_subscription_id": user.stripe_subscription_id,
+        "stripe_subscription_status": user.stripe_subscription_status,
+        "stripe_price_id": user.stripe_price_id,
+
         "allowed_tools": sorted(PLAN_ACCESS.get(plan, set())),
     }
 
