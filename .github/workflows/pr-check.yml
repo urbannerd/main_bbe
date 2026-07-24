@@ -34,8 +34,17 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Verify application imports
-        run: |
-          python -c "from app.main import app; print('Application import succeeded')"
+        env:
+          STRIPE_SECRET_KEY: sk_test_ci_placeholder
+          STRIPE_WEBHOOK_SECRET: whsec_ci_placeholder
+          STRIPE_STARTER_PRICE_ID: price_ci_starter
+          STRIPE_TRADER_PRICE_ID: price_ci_trader
+          STRIPE_PROFESSIONAL_PRICE_ID: price_ci_professional
+          SESSION_SECRET: ci-session-secret
+          APP_ENV: test
+          DATABASE_URL: sqlite:///./ci_test.db
+          APP_BASE_URL: http://127.0.0.1:8000
+        run: python -c "from app.main import app; print('Application import succeeded')"
 
       - name: Verify one Alembic head
         run: |
