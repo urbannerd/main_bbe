@@ -49,8 +49,18 @@ session_options = {
     "https_only": IS_PRODUCTION,
 }
 
-if IS_PRODUCTION:
-    session_options["domain"] = ".bagbuildersexchange.com"
+SESSION_DOMAIN = os.getenv("SESSION_DOMAIN")
+
+session_options = {
+    "secret_key": SESSION_SECRET,
+    "session_cookie": "bbe_session",
+    "max_age": 60 * 60 * 24,
+    "same_site": "lax",
+    "https_only": IS_PRODUCTION,
+}
+
+if SESSION_DOMAIN:
+    session_options["domain"] = SESSION_DOMAIN
 
 app.add_middleware(
     SessionMiddleware,
@@ -110,6 +120,53 @@ def spy_page(
 
     return FileResponse("static/spy/index.html")
 
+
+@app.get("/impulse")
+@app.get("/impulse/")
+def impulse_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "impulse")
+
+    return FileResponse("static/impulse/index.html")
+
+
+@app.get("/leap")
+@app.get("/leap/")
+def leap_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "leap")
+
+    return FileResponse("static/leap/index.html")
+
+
+@app.get("/qqq/scale-board")
+@app.get("/qqq/scale-board/")
+def qqq_scale_board_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "qqq-scale-board")
+
+    return FileResponse("static/qqq/scale-board/index.html")
+
+
+@app.get("/spy/scale-board")
+@app.get("/spy/scale-board/")
+def spy_scale_board_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, "spy-scale-board")
+
+    return FileResponse("static/spy/scale-board/index.html")
 
 @app.get("/docs")
 def docs_page():

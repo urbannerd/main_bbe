@@ -1,142 +1,124 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Create Account | Bag Builders Exchange</title>
-
-  <link rel="icon" href="/assets/favicon.ico">
-  <link rel="stylesheet" href="/assets/styles.css">
-  <link rel="stylesheet" href="/static/auth.css">
-  <script src="/static/js/auth.js" defer></script>
-</head>
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Account | Bag Builders Exchange</title>
+<link href="/assets/favicon.ico" rel="icon"/>
+<link href="/assets/styles.css" rel="stylesheet"/>
+<link href="/static/auth.css" rel="stylesheet"/>
+<script defer="" src="/static/js/auth.js"></script>
+<link href="/static/site-nav.css?v=1" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=1"></script></head>
 <body>
-    <header class="nav auth-nav">
-        <div class="wrap">
-          <div class="nav-inner">
-            <a class="brand" href="/">
-              <img
-                src="/assets/logo.png"
-                class="logo-img"
-                alt="Bag Builders Exchange Logo"
-              >
-            </a>
-      
-            <nav class="nav-links" aria-label="Primary">
-              <a href="/#modules">Dashboards</a>
-              <a href="/#features">What we do</a>
-              <a href="/#how">How it works</a>
-              <a href="/#faq">FAQ</a>
-            </nav>
-      
-            <div class="nav-cta">
-              <a class="btn ghost" href="/login">Log in</a>
-              <a class="btn primary is-active" href="/register">
-                Create account
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-  <main class="auth-page">
-    <section class="auth-brand">
-      <div class="auth-brand-inner">
-
-        <h1>
-            Build your edge.<br>
+<header class="account-header">
+<div class="account-header-inner">
+<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
+<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
+</a>
+<nav aria-label="Primary navigation" class="account-nav-links">
+<a class="" data-nav-auth="guest" href="/">Home</a>
+<a class="" data-nav-auth="member" hidden="" href="/account">Dashboard</a>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          QQQ <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/qqq">Live Chart</a>
+<a href="/qqq-board-scale">Board Scale</a>
+</div>
+</div>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          SPY <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/spy">Live Chart</a>
+<a href="/spy-board-scale">Board Scale</a>
+</div>
+</div>
+<a href="/impulse">Impulse</a>
+<a href="/leap">Leap</a>
+<a class="" href="/pricing" data-nav-auth="guest">Pricing</a>
+<a href="/support">Support</a>
+</nav>
+<div class="account-header-actions">
+<div data-nav-auth="guest">
+<a class="btn gold" href="/register">Create Account</a>
+</div>
+<div data-nav-auth="guest">
+<a class="account-logout-button" href="/login">Log In</a>
+</div>
+<div class="account-nav-dropdown" data-nav-auth="member" hidden="">
+<button class="account-menu-trigger" type="button">
+<span class="account-menu-email" data-nav-user-email="">Account</span>
+<span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu account-nav-account-menu">
+<a href="/account">My Account</a>
+<a href="/account#subscription-section">Manage Subscription</a>
+<div aria-hidden="true" class="account-nav-menu-divider"></div>
+<a class="account-nav-logout" href="/api/auth/logout">Log Out</a>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="auth-page">
+<section class="auth-brand">
+<div class="auth-brand-inner">
+<h1>
+            Build your edge.<br/>
             Access every tool.
         </h1>
-
-        <p>
+<p>
         Create one account for live market dashboards, scanner tools,
         saved access, and future membership features.
         </p>
-      </div>
-    </section>
-
-    <section class="auth-panel">
-      <div class="auth-card">
-        <h2>Create your account</h2>
-
-        <p class="auth-subtitle">
+</div>
+</section>
+<section class="auth-panel">
+<div class="auth-card">
+<h2>Create your account</h2>
+<p class="auth-subtitle">
           Enter your information to get started.
         </p>
-
-        <form id="register-form">
-          <div class="form-group">
-            <label for="email">Email address</label>
-
-            <input
-              class="form-control"
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              placeholder="you@example.com"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-
-            <input
-              class="form-control"
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="new-password"
-              placeholder="Create a password"
-              minlength="8"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="confirm-password">Confirm password</label>
-
-            <input
-              class="form-control"
-              id="confirm-password"
-              name="confirm_password"
-              type="password"
-              autocomplete="new-password"
-              placeholder="Enter the password again"
-              minlength="8"
-              required
-            >
-          </div>
-
-          <label class="terms-row">
-            <input id="terms" name="terms" type="checkbox" required>
-
-            <span>
+<form id="register-form">
+<div class="form-group">
+<label for="email">Email address</label>
+<input autocomplete="email" class="form-control" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="password">Password</label>
+<input autocomplete="new-password" class="form-control" id="password" minlength="8" name="password" placeholder="Create a password" required="" type="password"/>
+</div>
+<div class="form-group">
+<label for="confirm-password">Confirm password</label>
+<input autocomplete="new-password" class="form-control" id="confirm-password" minlength="8" name="confirm_password" placeholder="Enter the password again" required="" type="password"/>
+</div>
+<label class="terms-row">
+<input id="terms" name="terms" required="" type="checkbox"/>
+<span>
               I agree to the
               <a href="/terms">Terms</a>,
               <a href="/privacy">Privacy Policy</a>,
               and <a href="/disclaimer">Disclaimer</a>.
             </span>
-          </label>
-
-          <button class="btn primary auth-button" type="submit">
+</label>
+<button class="btn primary auth-button" type="submit">
             Create account
           </button>
-
-          <p id="auth-message" class="auth-message"></p>
-        </form>
-
-        <p class="auth-footer">
+<p class="auth-message" id="auth-message"></p>
+</form>
+<p class="auth-footer">
           Already have an account?
           <a href="/login">Log in</a>
-        </p>
-
-        <a class="back-link" href="/">
+</p>
+<a class="back-link" href="/">
           ← Return to homepage
         </a>
-      </div>
-    </section>
-  </main>
+</div>
+</section>
+</main>
 </body>
 </html>

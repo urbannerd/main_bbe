@@ -1,565 +1,367 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Bag Builders Exchange member account dashboard."
-  >
-
-  <title>My Account | Bag Builders Exchange</title>
-
-    <link
-    rel="stylesheet"
-    href="/assets/styles.css?v=1"
-  >
-
-  <link
-    rel="stylesheet"
-    href="/static/auth.css?v=2"
-  >
-
-  <script
-    src="/static/js/account.js?v=7"
-    defer
-></script>
-</head>
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Bag Builders Exchange member account dashboard." name="description"/>
+<title>My Account | Bag Builders Exchange</title>
+<link href="/assets/styles.css?v=1" rel="stylesheet"/>
+<link href="/static/auth.css?v=2" rel="stylesheet"/>
+<script defer="" src="/static/js/account.js?v=7"></script>
+<link href="/static/site-nav.css?v=1" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=1"></script></head>
 <body>
-  <div
-    id="account-loading"
-    class="account-loading"
-  >
-    <div class="account-loading-card">
-      <img
-        src="/assets/logo.png"
-        alt="Bag Builders Exchange"
-        class="account-loading-logo"
-      >
-
-      <p>Loading your account...</p>
-    </div>
-  </div>
-
-  <div
-    id="account-page"
-    class="account-page"
-    hidden
-  >
-    <header class="account-header">
-      <div class="account-header-inner">
-        <a
-          href="/"
-          class="account-brand"
-          aria-label="Bag Builders Exchange home"
-        >
-          <img
-            src="/assets/logo.png"
-            alt="Bag Builders Exchange"
-            class="account-logo"
-          >
-        </a>
-
-        <nav
-          class="account-nav-links"
-          aria-label="Account navigation"
-        >
-          <a
-            href="/account"
-            class="is-active"
-          >
-            Dashboard
-          </a>
-
-          <a href="/qqq">
-            QQQ Scanner
-          </a>
-
-          <a href="/spy">
-            SPY Scanner
-          </a>
-
-          <a href="/pricing">
-            Pricing
-          </a>
-
-          <a href="/support">
-            Support
-          </a>
-        </nav>
-
-        <a
-          class="account-logout-button"
-          href="/api/auth/logout"
-        >
-          Log Out
-        </a>
-      </div>
-    </header>
-
-    <main class="account-main">
-      <section class="account-hero">
-        <div>
-          <p class="account-eyebrow">
+<div class="account-loading" id="account-loading">
+<div class="account-loading-card">
+<img alt="Bag Builders Exchange" class="account-loading-logo" src="/assets/logo.png"/>
+<p>Loading your account...</p>
+</div>
+</div>
+<div class="account-page" hidden="" id="account-page">
+<header class="account-header">
+<div class="account-header-inner">
+<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
+<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
+</a>
+<nav aria-label="Primary navigation" class="account-nav-links">
+<a class="" data-nav-auth="guest" href="/">Home</a>
+<a class="is-active" data-nav-auth="member" hidden="" href="/account">Dashboard</a>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          QQQ <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/qqq">Live Chart</a>
+<a href="/qqq-board-scale">Board Scale</a>
+</div>
+</div>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          SPY <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/spy">Live Chart</a>
+<a href="/spy-board-scale">Board Scale</a>
+</div>
+</div>
+<a href="/impulse">Impulse</a>
+<a href="/leap">Leap</a>
+<a class="" href="/pricing" data-nav-auth="guest">Pricing</a>
+<a href="/support">Support</a>
+</nav>
+<div class="account-header-actions">
+<div data-nav-auth="guest">
+<a class="btn gold" href="/register">Create Account</a>
+</div>
+<div data-nav-auth="guest">
+<a class="account-logout-button" href="/login">Log In</a>
+</div>
+<div class="account-nav-dropdown" data-nav-auth="member" hidden="">
+<button class="account-menu-trigger" type="button">
+<span class="account-menu-email" data-nav-user-email="">Account</span>
+<span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu account-nav-account-menu">
+<a href="/account">My Account</a>
+<a href="/account#subscription-section">Manage Subscription</a>
+<div aria-hidden="true" class="account-nav-menu-divider"></div>
+<a class="account-nav-logout" href="/api/auth/logout">Log Out</a>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="account-main">
+<section class="account-hero">
+<div>
+<p class="account-eyebrow">
             Member Dashboard
           </p>
-
-          <h1>
+<h1>
             Welcome back
           </h1>
-
-          <p class="account-hero-copy">
+<p class="account-hero-copy">
             Manage your Bag Builders Exchange account,
             scanner access, and membership details.
           </p>
-        </div>
-
-        <div class="account-user-card">
-          <span class="account-user-label">
+</div>
+<div class="account-user-card">
+<span class="account-user-label">
             Signed in as
           </span>
-
-          <strong
-            id="account-email"
-            class="account-email"
-          >
+<strong class="account-email" id="account-email">
             Loading...
           </strong>
-
-          <span
-            id="account-status"
-            class="account-status"
-          >
+<span class="account-status" id="account-status">
             Active member
           </span>
-        </div>
-      </section>
-
-      <div
-        id="account-message"
-        class="account-message"
-        role="status"
-        aria-live="polite"
-      ></div>
-
-      <section
-        class="account-grid"
-        aria-label="Member tools"
-      >
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</div>
+</section>
+<div aria-live="polite" class="account-message" id="account-message" role="status"></div>
+<section aria-label="Member tools" class="account-grid">
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Live
               </p>
-
-              <h2>
+<h2>
                 QQQ Live Chart
               </h2>
-            </div>
-
-            <span
-              id="qqq-access-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="qqq-access-badge">
               Checking...
             </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Open the QQQ live chart and review the latest
             available market signals.
           </p>
-
-          <a
-          id="qqq-access-link"
-          href="/qqq"
-          class="account-card-action"
-        >
+<a class="account-card-action" href="https://live.bagbuildersexchange.com/qqq/live-chart/" id="qqq-access-link">
           Open QQQ Scanner
         </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Live
               </p>
-
-              <h2>
+<h2>
                 SPY Live Chart
               </h2>
-            </div>
-
-            <span
-            id="spy-access-badge"
-            class="account-card-badge account-card-badge-muted"
-          >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="spy-access-badge">
             Checking...
           </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Open the SPY live chart and review the latest
             available market signals.
           </p>
-
-          <a
-            id="spy-access-link"
-            href="/spy"
-            class="account-card-action"
-          >
+<a class="account-card-action" href="https://bagbuildersexchange.com/spy/scale-board/" id="spy-access-link">
             Open SPY Scanner
           </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Board Scale
               </p>
-
-              <h2>
+<h2>
                 QQQ Board Scale
               </h2>
-            </div>
-
-            <span
-              id="qqq-board-scale-access-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="qqq-board-scale-access-badge">
               Checking...
             </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Review QQQ market structure and Board Scale analysis.
           </p>
-
-          <a
-            id="qqq-board-scale-access-link"
-            href="/qqq-board-scale"
-            class="account-card-action"
-          >
+<a class="account-card-action" href="https://bagbuildersexchange.com/qqq/scale-board/" id="qqq-board-scale-access-link">
             Open QQQ Board Scale
           </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Board Scale
               </p>
-
-              <h2>
+<h2>
                 SPY Board Scale
               </h2>
-            </div>
-
-            <span
-              id="spy-board-scale-access-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="spy-board-scale-access-badge">
               Checking...
             </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Review SPY market structure and Board Scale analysis.
           </p>
-
-          <a
-            id="spy-board-scale-access-link"
-            href="/spy-board-scale"
-            class="account-card-action"
-          >
+<a class="account-card-action" href="https://bagbuildersexchange.com/spy/scale-board/" id="spy-board-scale-access-link">
             Open SPY Board Scale
           </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Professional Tool
               </p>
-
-              <h2>
+<h2>
                 Impulse
               </h2>
-            </div>
-
-            <span
-              id="impulse-access-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="impulse-access-badge">
               Checking...
             </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Access the proprietary Impulse analysis tool.
           </p>
-
-          <a
-            id="impulse-access-link"
-            href="/impulse"
-            class="account-card-action"
-          >
+<a class="account-card-action" href="https://bagbuildersexchange.com/impulse/" id="impulse-access-link">
             Open Impulse
           </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Professional Tool
               </p>
-
-              <h2>
+<h2>
                 Leap
               </h2>
-            </div>
-
-            <span
-              id="leap-access-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="leap-access-badge">
               Checking...
             </span>
-          </div>
-
-          <p>
+</div>
+<p>
             Access the proprietary Leap analysis tool.
           </p>
-
-          <a
-            id="leap-access-link"
-            href="/leap"
-            class="account-card-action"
-          >
+<a class="account-card-action" href="https://bagbuildersexchange.com/leap/" id="leap-access-link">
             Open Leap
           </a>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</article>
+<article class="account-dashboard-card" id="subscription-section">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Membership
               </p>
-
-              <h2>
+<h2>
                 Subscription
               </h2>
-            </div>
-
-            <span
-              id="subscription-badge"
-              class="account-card-badge account-card-badge-muted"
-            >
+</div>
+<span class="account-card-badge account-card-badge-muted" id="subscription-badge">
               Checking...
             </span>
-          </div>
-
-          <div class="subscription-summary">
-            <div>
-              <span>Current Plan</span>
-              <strong id="subscription-plan">Loading...</strong>
-            </div>
-
-            <div>
-              <span>Status</span>
-              <strong id="subscription-status">Loading...</strong>
-            </div>
-
-            <div id="subscription-renewal-item" hidden>
-              <span id="subscription-renewal-label">Renews On</span>
-              <strong id="subscription-renewal-date">Loading...</strong>
-            </div>
-          </div>
-
-          <div
-            id="subscription-cancellation-notice"
-            class="subscription-cancellation-notice"
-            role="status"
-            hidden
-          >
-            <strong>Your subscription is scheduled to cancel.</strong>
-            <span id="subscription-cancellation-copy"></span>
-          </div>
-
-          <p>
+</div>
+<div class="subscription-summary">
+<div>
+<span>Current Plan</span>
+<strong id="subscription-plan">Loading...</strong>
+</div>
+<div>
+<span>Status</span>
+<strong id="subscription-status">Loading...</strong>
+</div>
+<div hidden="" id="subscription-renewal-item">
+<span id="subscription-renewal-label">Renews On</span>
+<strong id="subscription-renewal-date">Loading...</strong>
+</div>
+</div>
+<div class="subscription-cancellation-notice" hidden="" id="subscription-cancellation-notice" role="status">
+<strong>Your subscription is scheduled to cancel.</strong>
+<span id="subscription-cancellation-copy"></span>
+</div>
+<p>
             Manage your subscription, update your payment method,
             or upgrade your membership plan.
           </p>
-
-          <div
-            id="payment-warning"
-            class="subscription-payment-warning"
-            role="alert"
-            hidden
-          >
+<div class="subscription-payment-warning" hidden="" id="payment-warning" role="alert">
             Your latest payment was unsuccessful. Open billing
             management to update your payment method.
           </div>
-
-          <div class="subscription-actions">
-            <button
-              id="manage-subscription"
-              class="account-card-action"
-              type="button"
-              hidden
-            >
+<div class="subscription-actions">
+<button class="account-card-action" hidden="" id="manage-subscription" type="button">
               Manage Subscription
             </button>
-          
-            <button
-              id="reactivate-subscription"
-              class="account-card-action"
-              type="button"
-              hidden
-            >
+<button class="account-card-action" hidden="" id="reactivate-subscription" type="button">
               Reactivate Subscription
             </button>
-          
-            <button
-              id="upgrade-starter"
-              class="account-card-action"
-              type="button"
-              hidden
-            >
+<button class="account-card-action" hidden="" id="upgrade-starter" type="button">
               Upgrade to Starter
             </button>
-          
-            <button
-              id="upgrade-trader"
-              class="account-card-action"
-              type="button"
-              hidden
-            >
+<button class="account-card-action" hidden="" id="upgrade-trader" type="button">
               Upgrade to Trader
             </button>
-          
-            <button
-              id="upgrade-professional"
-              class="account-card-action"
-              type="button"
-              hidden
-            >
+<button class="account-card-action" hidden="" id="upgrade-professional" type="button">
               Upgrade to Professional
             </button>
-          </div>
-        </article>
-
-        <article class="account-dashboard-card">
-          <div class="account-card-heading">
-            <div>
-              <p class="account-card-eyebrow">
+</div>
+</article>
+<article class="account-dashboard-card">
+<div class="account-card-heading">
+<div>
+<p class="account-card-eyebrow">
                 Account
               </p>
-
-              <h2>
+<h2>
                 Profile Details
               </h2>
-            </div>
-          </div>
-
-          <dl class="account-details">
-            <div>
-              <dt>Email</dt>
-
-              <dd id="profile-email">
+</div>
+</div>
+<dl class="account-details">
+<div>
+<dt>Email</dt>
+<dd id="profile-email">
                 Loading...
               </dd>
-            </div>
-
-            <div>
-              <dt>Membership Status</dt>
-
-              <dd id="profile-status">
+</div>
+<div>
+<dt>Membership Status</dt>
+<dd id="profile-status">
                 Loading...
               </dd>
-            </div>
-
-            <div>
-              <dt>Member since</dt>
-
-              <dd id="profile-created-at">
+</div>
+<div>
+<dt>Member since</dt>
+<dd id="profile-created-at">
                 Loading...
               </dd>
-            </div>
-          </dl>
-        </article>
-      </section>
-
-      <section class="account-support-panel">
-        <div>
-          <p class="account-card-eyebrow">
+</div>
+</dl>
+</article>
+</section>
+<section class="account-support-panel">
+<div>
+<p class="account-card-eyebrow">
             Need help?
           </p>
-
-          <h2>
+<h2>
             Member Support
           </h2>
-
-          <p>
+<p>
             Contact support if you are having trouble with
             your account or scanner access.
           </p>
-        </div>
-
-        <a
-          href="/support"
-          class="account-support-link"
-        >
+</div>
+<a class="account-support-link" href="/support">
           Contact Support
         </a>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="site-footer-inner">
-        <div class="site-footer-copy">
-          <p class="site-footer-brand">
+</section>
+</main>
+<footer class="site-footer">
+<div class="site-footer-inner">
+<div class="site-footer-copy">
+<p class="site-footer-brand">
             Bag Builders <strong>Exchange</strong>
-          </p>
-    
-          <p>
+</p>
+<p>
             Educational purposes only—no financial advice.
           </p>
-    
-          <p>
+<p>
             © <span class="site-footer-year"></span>
             Bag Builders Exchange
             <span aria-hidden="true">•</span>
             Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
           </p>
-        </div>
-    
-        <nav
-          class="site-footer-links"
-          aria-label="Footer navigation"
-        >
-          <a href="/pricing">Pricing</a>
-          <a href="/docs">Docs</a>
-          <a href="/support">Support</a>
-          <a href="/terms">Terms</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/disclaimer">Disclaimer</a>
-        </nav>
-      </div>
-    </footer>
-  </div>
+</div>
+<nav aria-label="Footer navigation" class="site-footer-links">
+<a href="/pricing">Pricing</a>
+<a href="/docs">Docs</a>
+<a href="/support">Support</a>
+<a href="/terms">Terms</a>
+<a href="/privacy">Privacy</a>
+<a href="/disclaimer">Disclaimer</a>
+</nav>
+</div>
+</footer>
+</div>
 </body>
 </html>

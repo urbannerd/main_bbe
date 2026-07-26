@@ -1,5 +1,6 @@
 import os 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import Response
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
@@ -42,8 +43,8 @@ PLAN_ACCESS = {
         "market-status",
         "qqq-live-chart",
         "spy-live-chart",
-        "qqq-board-scale",
-        "spy-board-scale",
+        "qqq-scale-board",
+        "spy-scale-board",
     },
 
     "professional": {
@@ -52,8 +53,8 @@ PLAN_ACCESS = {
         "market-status",
         "qqq-live-chart",
         "spy-live-chart",
-        "qqq-board-scale",
-        "spy-board-scale",
+        "qqq-scale-board",
+        "spy-scale-board",
         "impulse",
         "leap",
     },
@@ -170,7 +171,17 @@ def require_tool_access(
 
     return user
 
+@router.get("/access/{tool}")
+def authorize_tool(
+    tool: str,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = require_current_user(request, db)
+    require_tool_access(user, tool)
 
+    return Response(status_code=204)
+    
 @router.post("/register")
 def register_user(
     payload: RegisterRequest,
@@ -291,22 +302,6 @@ def get_current_user(
         "user": serialize_user(user),
     }
 
-
-@router.get("/access/{tool}")
-def check_tool_access(
-    tool: str,
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    user = require_current_user(request, db)
-    require_tool_access(user, tool)
-
-    return {
-        "allowed": True,
-        "tool": normalize_tool(tool),
-        "membership_plan": normalize_plan(user.membership_plan),
-        "membership_status": user.membership_status,
-    }
 
 @router.get("/nginx/qqq-live-chart")
 def nginx_qqq_live_chart_access(
