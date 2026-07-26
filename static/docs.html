@@ -1,23 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Docs | Bag Builders Exchange</title>
-  <meta
-    name="description"
-    content="Bag Builders Exchange product overview, tool guide, membership access, and market-hours documentation."
-  >
-
-  <link rel="icon" href="/assets/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-
-  <link rel="stylesheet" href="/assets/styles.css">
-  <link rel="stylesheet" href="/static/auth.css?v=3">
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Docs | Bag Builders Exchange</title>
+<meta content="Bag Builders Exchange product overview, tool guide, membership access, and market-hours documentation." name="description"/>
+<link href="/assets/favicon.ico" rel="icon"/>
+<link href="/assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="/assets/favicon-16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="/assets/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="/assets/styles.css" rel="stylesheet"/>
+<link href="/static/auth.css?v=3" rel="stylesheet"/>
+<style>
     body {
       min-height: 100vh;
       display: flex;
@@ -392,377 +387,241 @@
     }
   </style>
 
-  <style id="shared-navigation-styles">
-    .account-nav-dropdown {
-      position: relative;
-    }
-
-    .account-nav-trigger {
-      min-height: 44px;
-      padding: 10px 14px;
-      border: 0;
-      border-radius: 14px;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .account-nav-trigger:hover,
-    .account-nav-dropdown:focus-within .account-nav-trigger,
-    .account-nav-dropdown.is-open .account-nav-trigger {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-    }
-
-    .account-nav-menu {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 50%;
-      z-index: 1000;
-      min-width: 210px;
-      padding: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 18px;
-      background: #09111f;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-      opacity: 0;
-      visibility: hidden;
-      transform: translate(-50%, -6px);
-      transition:
-        opacity 160ms ease,
-        transform 160ms ease,
-        visibility 160ms ease;
-    }
-
-    .account-nav-menu a {
-      display: block;
-      padding: 13px 16px;
-      border-radius: 12px;
-      color: var(--text) !important;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .account-nav-menu a:hover,
-    .account-nav-menu a:focus-visible {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .account-nav-dropdown:hover .account-nav-menu,
-    .account-nav-dropdown:focus-within .account-nav-menu,
-    .account-nav-dropdown.is-open .account-nav-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, 0);
-    }
-
-    /* Only an explicitly marked link receives the active-page treatment. */
-    .account-nav-links > a:not(.is-active) {
-      box-shadow: none;
-    }
-
-    @media (max-width: 900px) {
-      .account-nav-menu {
-        left: 0;
-        transform: translate(0, -6px);
-      }
-
-      .account-nav-dropdown:hover .account-nav-menu,
-      .account-nav-dropdown:focus-within .account-nav-menu,
-      .account-nav-dropdown.is-open .account-nav-menu {
-        transform: translate(0, 0);
-      }
-    }
-  </style>
-</head>
-
+<link href="/static/site-nav.css?v=2" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=2"></script></head>
 <body>
-  <header class="account-header">
-    <div class="account-header-inner">
-      <a href="/" class="account-brand" aria-label="Bag Builders Exchange home">
-        <img
-          src="/assets/logo.png"
-          alt="Bag Builders Exchange"
-          class="account-logo"
-        >
-      </a>
-
-      <nav class="account-nav-links" aria-label="Primary navigation">
-        <a href="/">Home</a>
-
-        <div class="account-nav-dropdown">
-          <button
-            class="account-nav-trigger"
-            type="button"
-            aria-expanded="false"
-          >
-            QQQ <span aria-hidden="true">▾</span>
-          </button>
-          <div class="account-nav-menu">
-            <a href="/qqq">Live Chart</a>
-            <a href="/qqq-board-scale">Board Scale</a>
-          </div>
-        </div>
-
-        <div class="account-nav-dropdown">
-          <button
-            class="account-nav-trigger"
-            type="button"
-            aria-expanded="false"
-          >
-            SPY <span aria-hidden="true">▾</span>
-          </button>
-          <div class="account-nav-menu">
-            <a href="/spy">Live Chart</a>
-            <a href="/spy-board-scale">Board Scale</a>
-          </div>
-        </div>
-
-        <a href="/impulse">Impulse</a>
-        <a href="/leap">Leap</a>
-        <a href="/pricing" class="is-active">Pricing</a>
-      </nav>
-
-      <div class="account-header-actions" id="site-account-actions">
-        <a class="btn gold" id="site-create-account" href="/register">
-          Create Account
-        </a>
-        <a
-          class="account-logout-button"
-          id="site-login-link"
-          href="/login"
-        >
-          Log In
-        </a>
-        <a
-          class="account-logout-button"
-          id="site-account-link"
-          href="/account"
-          hidden
-        >
-          My Account
-        </a>
-      </div>
-    </div>
-  </header>
-
+<header class="account-header">
+<div class="account-header-inner">
+<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
+<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
+</a>
+<nav aria-label="Primary navigation" class="account-nav-links">
+<a data-nav-auth="guest" href="/">Home</a>
+<a data-nav-auth="member" hidden="" href="/account">Dashboard</a>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          QQQ <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/qqq">Live Chart</a>
+<a href="/qqq-board-scale">Board Scale</a>
+</div>
+</div>
+<div class="account-nav-dropdown">
+<button class="account-nav-trigger" type="button">
+          SPY <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="/spy">Live Chart</a>
+<a href="/spy-board-scale">Board Scale</a>
+</div>
+</div>
+<a href="/impulse">Impulse</a>
+<a href="/leap">Leap</a>
+<a class="" href="/pricing" data-nav-auth="guest">Pricing</a>
+<a href="/support">Support</a>
+</nav>
+<div class="account-header-actions">
+<div data-nav-auth="guest">
+<a class="btn gold" href="/register">Create Account</a>
+</div>
+<div data-nav-auth="guest">
+<a class="account-logout-button" href="/login">Log In</a>
+</div>
+<div class="account-nav-dropdown" data-nav-auth="member" hidden="">
+<button class="account-menu-trigger" type="button">
+<span class="account-menu-email" data-nav-user-email="">Account</span>
+<span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu account-nav-account-menu">
+<a href="/account">My Account</a>
+<a href="/account#subscription-section">Manage Subscription</a>
+<div aria-hidden="true" class="account-nav-menu-divider"></div>
+<a class="account-nav-logout" href="/api/auth/logout">Log Out</a>
+</div>
+</div>
+</div>
+</div>
+</header>
 <main class="docs-main">
-    <section class="docs-hero">
-      <p class="docs-kicker">Documentation</p>
-      <h1 class="docs-title">Product Docs</h1>
-      <p class="docs-subtitle">
+<section class="docs-hero">
+<p class="docs-kicker">Documentation</p>
+<h1 class="docs-title">Product Docs</h1>
+<p class="docs-subtitle">
         Learn what each Bag Builders Exchange tool does, how membership access
         works, and what to expect during and outside regular market hours.
       </p>
-      <div class="docs-divider" aria-hidden="true"></div>
-    </section>
-
-    <div class="docs-layout">
-      <aside class="docs-sidebar">
-        <h2>On this page</h2>
-
-        <nav aria-label="Documentation sections">
-          <a href="#overview">Overview</a>
-          <a href="#tools">Tools</a>
-          <a href="#access">Membership access</a>
-          <a href="#availability">Data availability</a>
-          <a href="#disclaimer">Important note</a>
-        </nav>
-      </aside>
-
-      <div class="docs-content">
-        <section class="docs-card" id="overview">
-          <h2>What Bag Builders Exchange is</h2>
-
-          <p>
+<div aria-hidden="true" class="docs-divider"></div>
+</section>
+<div class="docs-layout">
+<aside class="docs-sidebar">
+<h2>On this page</h2>
+<nav aria-label="Documentation sections">
+<a href="#overview">Overview</a>
+<a href="#tools">Tools</a>
+<a href="#access">Membership access</a>
+<a href="#availability">Data availability</a>
+<a href="#disclaimer">Important note</a>
+</nav>
+</aside>
+<div class="docs-content">
+<section class="docs-card" id="overview">
+<h2>What Bag Builders Exchange is</h2>
+<p>
             Bag Builders Exchange is a market-viewing and scanner platform
             designed for speed, clarity, and readable market context.
           </p>
-
-          <p>
+<p>
             The platform focuses on live SPY and QQQ views, Board Scale tools,
             and focused scanners that help members move from broad-market
             context to opportunity discovery without an overloaded interface.
           </p>
-
-          <div class="docs-note">
+<div class="docs-note">
             The current product does not include or use a Swing Scanner.
           </div>
-        </section>
-
-        <section class="docs-card" id="tools">
-          <h2>Current tools</h2>
-
-          <div class="docs-tool-grid">
-            <article class="docs-tool">
-              <h3>SPY Live Chart</h3>
-              <p>
+</section>
+<section class="docs-card" id="tools">
+<h2>Current tools</h2>
+<div class="docs-tool-grid">
+<article class="docs-tool">
+<h3>SPY Live Chart</h3>
+<p>
                 Provides broad-market context for trend, structure, and
                 directional behavior during the trading session.
               </p>
-            </article>
-
-            <article class="docs-tool">
-              <h3>QQQ Live Chart</h3>
-              <p>
+</article>
+<article class="docs-tool">
+<h3>QQQ Live Chart</h3>
+<p>
                 Provides focused Nasdaq-market context with a clean view of
                 price movement and session structure.
               </p>
-            </article>
-
-            <article class="docs-tool">
-              <h3>QQQ and SPY Board Scale</h3>
-              <p>
+</article>
+<article class="docs-tool">
+<h3>QQQ and SPY Board Scale</h3>
+<p>
                 Adds deeper market-analysis views for members who need more
                 context than the standard live-chart pages.
               </p>
-            </article>
-
-            <article class="docs-tool">
-              <h3>Impulse Scanner</h3>
-              <p>
+</article>
+<article class="docs-tool">
+<h3>Impulse Scanner</h3>
+<p>
                 Focuses on names that are actively moving and attracting
                 attention for faster intraday discovery.
               </p>
-            </article>
-
-            <article class="docs-tool">
-              <h3>Leap Scanner</h3>
-              <p>
+</article>
+<article class="docs-tool">
+<h3>Leap Scanner</h3>
+<p>
                 Surfaces names showing stronger expansion potential or broader
                 move development.
               </p>
-            </article>
-          </div>
-
-          <div class="docs-links">
-            <a class="docs-link" href="/spy">Open SPY</a>
-            <a class="docs-link" href="/qqq">Open QQQ</a>
-            <a class="docs-link" href="/pricing">Compare Plans</a>
-          </div>
-        </section>
-
-        <section class="docs-card" id="access">
-          <h2>Membership access</h2>
-
-          <p>
+</article>
+</div>
+<div class="docs-links">
+<a class="docs-link" href="/spy">Open SPY</a>
+<a class="docs-link" href="/qqq">Open QQQ</a>
+<a class="docs-link" href="/pricing">Compare Plans</a>
+</div>
+</section>
+<section class="docs-card" id="access">
+<h2>Membership access</h2>
+<p>
             Tool access depends on the member's active subscription plan.
             Locked tools should direct members to the pricing or account page
             rather than opening an unavailable product.
           </p>
-
-          <div class="docs-plan-list">
-            <div class="docs-plan-row">
-              <strong>Free</strong>
-              <span>
+<div class="docs-plan-list">
+<div class="docs-plan-row">
+<strong>Free</strong>
+<span>
                 Education, documentation, delayed examples, and member account
                 access.
               </span>
-            </div>
-
-            <div class="docs-plan-row">
-              <strong>Starter</strong>
-              <span>
+</div>
+<div class="docs-plan-row">
+<strong>Starter</strong>
+<span>
                 QQQ Live Chart and SPY Live Chart.
               </span>
-            </div>
-
-            <div class="docs-plan-row">
-              <strong>Trader</strong>
-              <span>
+</div>
+<div class="docs-plan-row">
+<strong>Trader</strong>
+<span>
                 Everything in Starter, plus QQQ Board Scale and SPY Board Scale.
               </span>
-            </div>
-
-            <div class="docs-plan-row">
-              <strong>Professional</strong>
-              <span>
+</div>
+<div class="docs-plan-row">
+<strong>Professional</strong>
+<span>
                 Everything in Trader, plus Impulse, Leap, and future premium
                 tools.
               </span>
-            </div>
-          </div>
-        </section>
-
-        <section class="docs-card" id="availability">
-          <h2>Data and availability</h2>
-
-          <p>
+</div>
+</div>
+</section>
+<section class="docs-card" id="availability">
+<h2>Data and availability</h2>
+<p>
             Product availability and data freshness may vary by market session,
             tool, or data source. Certain modules are most useful during regular
             U.S. market hours.
           </p>
-
-          <p>
+<p>
             Outside regular hours, a page may display the latest available
             session data, a delayed snapshot, or an unavailable state depending
             on the product.
           </p>
-
-          <div class="docs-note">
+<div class="docs-note">
             Regular market hours referenced on the platform are Monday through
             Friday, 9:30 AM to 4:00 PM ET.
           </div>
-        </section>
-
-        <section class="docs-card" id="disclaimer">
-          <h2>Important note</h2>
-
-          <p>
+</section>
+<section class="docs-card" id="disclaimer">
+<h2>Important note</h2>
+<p>
             Bag Builders Exchange is provided for educational and informational
             purposes only. It does not place trades, execute brokerage activity,
             or provide personalized investment advice.
           </p>
-
-          <p>
+<p>
             Members are responsible for their own decisions, risk management,
             and verification of any market information shown by the platform.
           </p>
-        </section>
-
-        <div class="docs-meta">
+</section>
+<div class="docs-meta">
           Last updated: <span id="doc-updated"></span>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-footer-inner">
-      <div class="site-footer-copy">
-        <p class="site-footer-brand">
+</div>
+</div>
+</div>
+</main>
+<footer class="site-footer">
+<div class="site-footer-inner">
+<div class="site-footer-copy">
+<p class="site-footer-brand">
           Bag Builders <strong>Exchange</strong>
-        </p>
-
-        <p>
+</p>
+<p>
           Educational purposes only—no financial advice.
         </p>
-
-        <p>
+<p>
           © <span class="site-footer-year"></span>
           Bag Builders Exchange
           <span aria-hidden="true">•</span>
           Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
         </p>
-      </div>
-
-      <nav
-        class="site-footer-links"
-        aria-label="Footer navigation"
-      >
-        <a href="/pricing">Pricing</a>
-        <a href="/docs">Docs</a>
-        <a href="/support">Support</a>
-        <a href="/terms">Terms</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/disclaimer">Disclaimer</a>
-      </nav>
-    </div>
-  </footer>
-
-  <script>
+</div>
+<nav aria-label="Footer navigation" class="site-footer-links">
+<a href="/pricing">Pricing</a>
+<a href="/docs">Docs</a>
+<a href="/support">Support</a>
+<a href="/terms">Terms</a>
+<a href="/privacy">Privacy</a>
+<a href="/disclaimer">Disclaimer</a>
+</nav>
+</div>
+</footer>
+<script>
     document
       .querySelectorAll(".site-footer-year")
       .forEach((element) => {
@@ -780,76 +639,5 @@
     }
   </script>
 
-  <script id="shared-navigation-script">
-    async function updateSiteAccountActions() {
-      const createAccount = document.getElementById("site-create-account");
-      const loginLink = document.getElementById("site-login-link");
-      const accountLink = document.getElementById("site-account-link");
-
-      if (!createAccount || !loginLink || !accountLink) return;
-
-      try {
-        const response = await fetch("/api/auth/me", {
-          credentials: "same-origin",
-          cache: "no-store",
-          headers: { Accept: "application/json" }
-        });
-
-        if (!response.ok) return;
-
-        const data = await response.json();
-
-        if (data.user) {
-          createAccount.hidden = true;
-          loginLink.hidden = true;
-          accountLink.hidden = false;
-        }
-      } catch (error) {
-        console.error("Unable to load account state:", error);
-      }
-    }
-
-    document.querySelectorAll(".account-nav-dropdown").forEach((dropdown) => {
-      const trigger = dropdown.querySelector(".account-nav-trigger");
-
-      trigger?.addEventListener("click", (event) => {
-        event.stopPropagation();
-
-        document.querySelectorAll(".account-nav-dropdown.is-open").forEach((openDropdown) => {
-          if (openDropdown !== dropdown) {
-            openDropdown.classList.remove("is-open");
-            openDropdown
-              .querySelector(".account-nav-trigger")
-              ?.setAttribute("aria-expanded", "false");
-          }
-        });
-
-        const isOpen = dropdown.classList.toggle("is-open");
-        trigger.setAttribute("aria-expanded", String(isOpen));
-      });
-    });
-
-    document.addEventListener("click", () => {
-      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
-        dropdown.classList.remove("is-open");
-        dropdown
-          .querySelector(".account-nav-trigger")
-          ?.setAttribute("aria-expanded", "false");
-      });
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
-
-      document.querySelectorAll(".account-nav-dropdown.is-open").forEach((dropdown) => {
-        dropdown.classList.remove("is-open");
-        dropdown
-          .querySelector(".account-nav-trigger")
-          ?.setAttribute("aria-expanded", "false");
-      });
-    });
-
-    updateSiteAccountActions();
-  </script>
 </body>
 </html>

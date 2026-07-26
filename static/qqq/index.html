@@ -1,116 +1,217 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"/>
 <title>Bag Builders Exchange - QQQ Live Chart</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="shortcut icon" href="/assets/favicon.ico">
-<meta name="description" content="Bag Builders Exchange streams option scanners and live market charts in real time. Free access. Educational purposes only." />
-
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="/assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="/assets/favicon-16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="/assets/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="/assets/favicon.ico" rel="shortcut icon"/>
+<meta content="Bag Builders Exchange streams option scanners and live market charts in real time. Free access. Educational purposes only." name="description"/>
 <!-- CSS -->
-<link rel="stylesheet" href="/assets/players.css?v=20260405-1">
+<link href="/assets/players.css?v=20260405-1" rel="stylesheet"/>
+<link href="https://bagbuildersexchange.com/assets/styles.css?v=1" rel="stylesheet"/><link href="https://bagbuildersexchange.com/static/auth.css?v=3" rel="stylesheet"/><link href="https://bagbuildersexchange.com/static/site-nav.css?v=2" rel="stylesheet"/>
+<style id="live-member-nav-fix">
+  /* Keep the protected live-chart member navigation on one line. */
+  .account-header-inner {
+    width: min(100% - 32px, 1440px) !important;
+    gap: 24px !important;
+  }
+
+  .account-brand {
+    flex: 0 0 auto;
+  }
+
+  .account-logo {
+    width: 132px !important;
+    max-height: 82px !important;
+    object-fit: contain;
+  }
+
+  .account-nav-links {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: center;
+    gap: 6px !important;
+  }
+
+  .account-nav-links > a,
+  .account-nav-trigger {
+    min-height: 42px !important;
+    padding: 9px 10px !important;
+    white-space: nowrap;
+  }
+
+  .account-header-actions {
+    flex: 0 0 auto;
+    margin-left: 0 !important;
+  }
+
+  .account-menu-trigger {
+    min-height: 42px !important;
+    padding: 9px 12px !important;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1100px) {
+    .account-header-inner {
+      gap: 12px !important;
+    }
+
+    .account-logo {
+      width: 108px !important;
+    }
+
+    .account-nav-links {
+      gap: 2px !important;
+    }
+
+    .account-nav-links > a,
+    .account-nav-trigger,
+    .account-menu-trigger {
+      padding-left: 7px !important;
+      padding-right: 7px !important;
+      font-size: 0.9rem !important;
+    }
+  }
+</style>
 </head>
-
-
 <body data-stream="qqq">
-  <div class="site-nav">
-    <div class="site-nav-wrap">
-      <a class="site-brand" href="https://bagbuildersexchange.com/">
-        <img src="/assets/logo.png" class="site-logo-img" alt="Bag Builders Exchange Logo" />
-      </a>
-  
-      <nav class="site-nav-links" aria-label="Primary">
-        <a href="https://bagbuildersexchange.com/">HOME</a>
-    
-        <!-- SPY -->
-        <div class="nav-dropdown">
-            <a href="#">QQQ ▾</a>
-            <div class="dropdown-menu">
-              <a href="https://live.bagbuildersexchange.com/qqq/live-chart/">
-                Live Chart
-              </a>
-                <a href="https://bagbuildersexchange.com/qqq/scale-board/">
-                    Board Scale
-                </a>
-            </div>
-        </div>
+<header class="account-header">
+<div class="account-header-inner">
+<a aria-label="Bag Builders Exchange home" class="account-brand" href="https://bagbuildersexchange.com/">
+<img alt="Bag Builders Exchange" class="account-logo" src="https://bagbuildersexchange.com/assets/logo.png"/>
+</a>
+<nav aria-label="Primary navigation" class="account-nav-links">
+<a href="https://bagbuildersexchange.com/account">Dashboard</a>
+<div class="account-nav-dropdown">
+<button aria-expanded="false" class="account-nav-trigger is-active" type="button">
+          QQQ <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="https://live.bagbuildersexchange.com/qqq/live-chart/">Live Chart</a>
+<a href="https://bagbuildersexchange.com/qqq/scale-board/">Board Scale</a>
+</div>
+</div>
+<div class="account-nav-dropdown">
+<button aria-expanded="false" class="account-nav-trigger" type="button">
+          SPY <span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu">
+<a href="https://live.bagbuildersexchange.com/spy/live-chart/">Live Chart</a>
+<a href="https://bagbuildersexchange.com/spy/scale-board/">Board Scale</a>
+</div>
+</div>
+<a href="https://bagbuildersexchange.com/impulse/">Impulse</a>
+<a href="https://bagbuildersexchange.com/leap/">Leap</a>
 
-        <!-- SPY -->
-        <div class="nav-dropdown">
-            <a href="#">SPY ▾</a>
-            <div class="dropdown-menu">
-              <a href="https://live.bagbuildersexchange.com/spy/live-chart/">
-                Live Chart
-               </a>
-                <a href="https://live.bagbuildersexchange.com/spy/scale-board/">
-                    Board Scale
-                </a>
-            </div>
-        </div>
-        <a href="https://bagbuildersexchange.com/impulse/">
-            IMPULSE
-        </a>
-        <a href="https://bagbuildersexchange.com/leap/">
-            LEAP
-        </a>
-    </nav>
-  
-      <!--<div class="site-nav-cta">
-        <a class="site-btn site-btn-ghost" href="https://bagbuildersexchange.com/docs">Docs</a>
-      </div> -->
-    </div>
-  </div>
-  <!-- ✅ MARKET CLOSED SCREEN (overlay) -->
-  <div id="marketClosedScreen" class="market-closed">
-    <div class="closed-topbar">
-      <div class="closed-brand">QQQ LIVE Chart</div>
-    </div>    
-    <div>
-      <h1>Market Closed</h1>
-      <p>
-        Live trading is available<br />
-        Monday – Friday<br />
+<a href="https://bagbuildersexchange.com/support">Support</a>
+</nav>
+<div class="account-header-actions">
+<div class="account-nav-dropdown">
+<button aria-expanded="false" class="account-menu-trigger" type="button">
+<span class="account-menu-email">Account</span>
+<span aria-hidden="true">▾</span>
+</button>
+<div class="account-nav-menu account-nav-account-menu">
+<a href="https://bagbuildersexchange.com/account">My Account</a>
+<a href="https://bagbuildersexchange.com/account#subscription-section">Manage Subscription</a>
+<div aria-hidden="true" class="account-nav-menu-divider"></div>
+<a class="account-nav-logout" href="https://bagbuildersexchange.com/api/auth/logout">Log Out</a>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ✅ MARKET CLOSED SCREEN (overlay) -->
+<div class="market-closed" id="marketClosedScreen">
+<div class="closed-topbar">
+<div class="closed-brand">QQQ LIVE Chart</div>
+</div>
+<div>
+<h1>Market Closed</h1>
+<p>
+        Live trading is available<br/>
+        Monday – Friday<br/>
         9:30 AM – 4:00 PM ET
       </p>
-      <p id="marketClosedReason" style="margin-top:10px; color:#8aa0b5;"></p>
-    </div>
-  </div>
-  <div id="appShell" class="topbar">
-    <main class="page">
-      <div class="player-wrap">
-        <video autoplay muted playsinline>
-          <source src="/hls/qqq.m3u8" type="application/vnd.apple.mpegurl">
-        </video>
-      
-        <div class="overlay">
-          <div class="top-bar">
-            <div class="badge">QQQ</div>
-            <div class="live">LIVE</div>
-            <div class="disclaimer">Educational purposes only. Not financial advice.</div>
-          </div>
-        </div>
-      
-      </div>
-
-  <div class="bottom-bar">
-    <a class="donate"
-       href="https://buymeacoffee.com/bagbuildersexchange"
-       target="_blank"
-       rel="noopener">
+<p id="marketClosedReason" style="margin-top:10px; color:#8aa0b5;"></p>
+</div>
+</div>
+<div class="topbar" id="appShell">
+<main class="page">
+<div class="player-wrap">
+<video autoplay="" muted="" playsinline="">
+<source src="/hls/qqq.m3u8" type="application/vnd.apple.mpegurl"/>
+</video>
+<div class="overlay">
+<div class="top-bar">
+<div class="badge">QQQ</div>
+<div class="live">LIVE</div>
+<div class="disclaimer">Educational purposes only. Not financial advice.</div>
+</div>
+</div>
+</div>
+<div class="bottom-bar">
+<a class="donate" href="https://buymeacoffee.com/bagbuildersexchange" rel="noopener" target="_blank">
       Support the Stream
     </a>
-  </div>
 </div>
-
-</main>
-</div>
-
+</main></div>
 <script src="/js/market.js?v=20260405-2"></script>
 <script src="/js/autoplay.js"></script>
+<script>
+(() => {
+  const dropdowns = document.querySelectorAll(".account-nav-dropdown");
 
+  dropdowns.forEach((dropdown) => {
+    const trigger = dropdown.querySelector(
+      ".account-nav-trigger, .account-menu-trigger"
+    );
+
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const willOpen = !dropdown.classList.contains("is-open");
+
+      dropdowns.forEach((item) => {
+        item.classList.remove("is-open");
+        const itemTrigger = item.querySelector(
+          ".account-nav-trigger, .account-menu-trigger"
+        );
+        itemTrigger?.setAttribute("aria-expanded", "false");
+      });
+
+      if (willOpen) {
+        dropdown.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
+  document.addEventListener("click", () => {
+    dropdowns.forEach((dropdown) => {
+      dropdown.classList.remove("is-open");
+      dropdown
+        .querySelector(".account-nav-trigger, .account-menu-trigger")
+        ?.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+
+    dropdowns.forEach((dropdown) => {
+      dropdown.classList.remove("is-open");
+      dropdown
+        .querySelector(".account-nav-trigger, .account-menu-trigger")
+        ?.setAttribute("aria-expanded", "false");
+    });
+  });
+})();
+</script>
 </body>
-
 </html>
