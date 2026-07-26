@@ -30,25 +30,6 @@ if not SESSION_SECRET:
     )
 
 
-Base.metadata.create_all(bind=engine)
-
-
-app = FastAPI(
-    title="Bag Builders Exchange",
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None,
-)
-
-
-session_options = {
-    "secret_key": SESSION_SECRET,
-    "session_cookie": "bbe_session",
-    "max_age": 60 * 60 * 24,
-    "same_site": "lax",
-    "https_only": IS_PRODUCTION,
-}
-
 SESSION_DOMAIN = os.getenv("SESSION_DOMAIN")
 
 session_options = {
@@ -62,11 +43,20 @@ session_options = {
 if SESSION_DOMAIN:
     session_options["domain"] = SESSION_DOMAIN
 
+Base.metadata.create_all(bind=engine)
+
+
+app = FastAPI(
+    title="Bag Builders Exchange",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
+
 app.add_middleware(
     SessionMiddleware,
     **session_options,
 )
-
 
 app.include_router(preview_router, prefix="/api")
 app.include_router(auth_router)
