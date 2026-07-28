@@ -37,10 +37,16 @@
   color: var(--text);
 }
 
-.account-nav-links > a.is-active {
-  border: 1px solid rgba(214, 162, 26, 0.5);
-  background: rgba(214, 162, 26, 0.1);
-  color: var(--gold2);
+.account-nav-links > a:hover,
+.account-nav-links > a:focus-visible,
+.account-nav-links > a.is-active,
+.account-nav-trigger:hover,
+.account-nav-trigger:focus-visible,
+.account-nav-trigger.is-active,
+.account-nav-dropdown.is-open > .account-nav-trigger {
+    background: rgba(214, 162, 26, 0.10);
+    border: 1px solid rgba(214, 162, 26, 0.5);
+    color: var(--gold2);
 }
 
 .account-nav-dropdown {
