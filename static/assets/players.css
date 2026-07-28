@@ -157,9 +157,9 @@ video {
 
 /* page container */
 .page {
-  max-width: 1650px;
+  max-width: 1380px;
   margin: 0 auto;
-  padding: 24px 18px 26px;
+  padding: 18px 22px 26px;
 }
 
 /* ==========================================
@@ -307,7 +307,7 @@ video {
   }
 
   .page {
-    padding: 18px 22px 26px;
+    padding: 14px 14px 20px;
   }
 
   .overlay {
@@ -338,7 +338,7 @@ video {
   }
 
   video {
-    max-height: calc(100vh - 115px);
+    max-height: calc(100vh - 170px);
   }
 }
 
