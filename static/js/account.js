@@ -692,7 +692,7 @@ function renderUser(user) {
     hasAccess:
       accountIsActive &&
       allowedTools.includes(
-        "qqq-board-scale"
+        "qqq-scale-board"
       ),
     badge: qqqBoardScaleAccessBadge,
     link: qqqBoardScaleAccessLink,
@@ -702,7 +702,7 @@ function renderUser(user) {
     hasAccess:
       accountIsActive &&
       allowedTools.includes(
-        "spy-board-scale"
+        "spy-scale-board"
       ),
     badge: spyBoardScaleAccessBadge,
     link: spyBoardScaleAccessLink,
@@ -738,21 +738,35 @@ function renderUser(user) {
   if (manageSubscription) {
     const hasStripeCustomer =
       Boolean(user.stripe_customer_id);
-
+  
     manageSubscription.disabled =
       !hasStripeCustomer;
-
+  
     manageSubscription.classList.toggle(
       "account-card-action-disabled",
       !hasStripeCustomer
     );
-
+  
     manageSubscription.title =
       hasStripeCustomer
         ? ""
         : "No Stripe billing account is connected.";
+  
+    if (membershipPlan === "professional") {
+      manageSubscription.textContent =
+        "Change or Downgrade Plan";
+    } else if (
+      membershipPlan === "starter" ||
+      membershipPlan === "trader"
+    ) {
+      manageSubscription.textContent =
+        "Change or Upgrade Plan";
+    } else {
+      manageSubscription.textContent =
+        "Upgrade Membership";
+    }
   }
-
+  
   renderSubscriptionActions(user);
 }
 
