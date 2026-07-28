@@ -17,12 +17,12 @@
 
 .account-nav-links > a,
 .account-nav-trigger {
-  min-height: 44px;
-  padding: 10px 13px;
+  min-height: 42px;
+  padding: 9px 10px;
   border-radius: 12px;
   color: var(--muted);
   font: inherit;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
@@ -116,14 +116,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
+  min-height: 42px;
   padding: 10px 15px;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 14px;
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 

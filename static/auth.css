@@ -461,7 +461,7 @@ body {
   margin-bottom: 8px;
   color: var(--muted);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.11em;
 }
@@ -481,7 +481,7 @@ body {
   background: rgba(72, 198, 120, 0.08);
   color: #8ee5af;
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .account-status[data-status="inactive"] {
@@ -770,7 +770,7 @@ body {
   margin-bottom: 6px;
   color: var(--muted);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -863,7 +863,7 @@ body {
 
 .site-footer-copy .site-footer-brand {
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .site-footer-brand strong {
@@ -1283,13 +1283,13 @@ body {
   background: rgba(214, 162, 26, 0.07);
   color: var(--gold-light);
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .pricing-faq-question {
   color: var(--text);
   font-size: 1.07rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.4;
 }
 
