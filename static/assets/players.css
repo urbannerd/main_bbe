@@ -64,7 +64,7 @@ video {
 
 .closed-brand {
   color: #cd9a09;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.5px;
 }
@@ -103,7 +103,7 @@ video {
   padding: 8px 14px;
   border-radius: 10px;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   pointer-events: auto;
 }
@@ -114,7 +114,7 @@ video {
   font-size: 13px;
   padding: 7px 14px;
   border-radius: 999px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   pointer-events: auto;
 }
@@ -216,7 +216,7 @@ video {
     color: rgba(232,232,234,.85);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 700;
     padding: 8px 10px;
     border-radius: 12px;
     transition: background .15s ease, color .15s ease;
