@@ -70,14 +70,6 @@ video {
   font-size: 16px;
 }
 
-.overlay {
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  right: 22px;
-  z-index: 30;
-  pointer-events: none;
-}
 
 .badge,
 .live,
@@ -307,11 +299,7 @@ video {
     padding: 14px 14px 20px;
   }
 
-  .overlay {
-    top: 28px;
-    left: 14px;
-    right: 14px;
-  }
+
 
   .top-bar {
     gap: 10px;
