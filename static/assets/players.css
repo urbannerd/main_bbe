@@ -18,9 +18,9 @@ video {
   background: black;
 }
 
-/* ================= MARKET CLOSED FULLSCREEN OVERLAY ================= */
+ /* ================= MARKET CLOSED FULLSCREEN OVERLAY ================= */
 
-.market-closed {
+ .market-closed {
   position: fixed;
   top: 90px;
   left: 0;
@@ -29,23 +29,19 @@ video {
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.96);
+  background: rgba(0,0,0,0.96);
   z-index: 50;
 }
 
-/* overlay text styling */
 .market-closed h1 {
   color: #cd9a09;
   margin-bottom: 8px;
   text-align: center;
-  font-size: 42px;
 }
 
 .market-closed p {
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
-  color: #ffffff;
-  line-height: 1.35;
 }
 
 .closed-topbar {
@@ -58,19 +54,19 @@ video {
   align-items: center;
   gap: 18px;
   padding: 0 22px;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0,0,0,0.55);
   border-bottom: none;
 }
 
 .closed-brand {
   color: #cd9a09;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 22px;
   letter-spacing: 0.5px;
 }
 
 .closed-tagline {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255,255,255,0.75);
   font-size: 16px;
 }
 
