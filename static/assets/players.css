@@ -1,3 +1,7 @@
+:root {
+  --member-nav-height: 90px;
+}
+
 html, body {
   margin: 0;
   background: black;
@@ -18,18 +22,28 @@ video {
   background: black;
 }
 
+.account-header-inner {
+  width: min(100% - 32px, 1440px) !important;
+  gap: 24px !important;
+}
  /* ================= MARKET CLOSED FULLSCREEN OVERLAY ================= */
 
  .market-closed {
   position: fixed;
-  top: 90px;
-  left: 0;
-  width: 100vw;
-  height: calc(100vh - 90px);
+  inset:
+    var(--member-nav-height)
+    0
+    0
+    0;
+
+  width: auto;
+  height: auto;
+
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.96);
+
+  background: rgba(0, 0, 0, 0.96);
   z-index: 50;
 }
 
