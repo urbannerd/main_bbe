@@ -47,6 +47,21 @@ video {
   z-index: 50;
 }
 
+h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
+.hero h1 {
+  font-size: 34px;
+  margin: 0;
+}
+
+body .wrap > .hero h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
 .market-closed h1 {
   color: #cd9a09;
   margin-bottom: 8px;
