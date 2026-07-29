@@ -22,29 +22,16 @@ video {
   background: black;
 }
 
-.account-header-inner {
-  width: min(100% - 32px, 1440px) !important;
-  gap: 24px !important;
-}
+
  /* ================= MARKET CLOSED FULLSCREEN OVERLAY ================= */
 
  .market-closed {
   position: fixed;
-  inset:
-    var(--member-nav-height)
-    0
-    0
-    0;
-
-  width: auto;
-  height: auto;
-
+  inset: var(--member-nav-height) 0 0;
   display: none;
   align-items: center;
   justify-content: center;
-
   background: rgba(0, 0, 0, 0.96);
-  z-index: 50;
 }
 
 h1 {
