@@ -137,39 +137,47 @@
 </div>
 </div>
 </main>
-<footer>
-<div class="wrap">
-<div class="foot">
-<div class="foot-brand">
-<div class="brand" style="margin-bottom:8px">
-<div>Bag Builders <span>Exchange</span></div>
-</div>
-<p class="foot-copy">
-            Real-time chart views and focused scanners built for faster, cleaner market reads.
-          </p>
-<div class="foot-meta">
-            © <span id="y"></span> Bag Builders Exchange
-            <span class="foot-sep">•</span>
-            Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
-          </div>
-</div>
-<div class="foot-links">
-  <a href="/pricing">Pricing</a>
-  <a href="/docs">Docs</a>
-  <a href="/support">Support</a>
-  <a href="/terms">Terms</a>
-  <a href="/privacy">Privacy</a>
-  <a href="/disclaimer">Disclaimer</a>
-</div>
-</div>
-</div>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+
+    <div class="site-footer-copy">
+      <p class="site-footer-brand">
+        Bag Builders <strong>Exchange</strong>
+      </p>
+
+      <p>
+        Educational purposes only—no financial advice.
+      </p>
+
+      <p>
+        © <span class="site-footer-year"></span>
+        Bag Builders Exchange
+        <span aria-hidden="true">•</span>
+        Markets open Mon–Fri, 9:30 AM – 4:00 PM ET
+      </p>
+    </div>
+
+    <nav
+      class="site-footer-links"
+      aria-label="Footer navigation"
+    >
+      <a href="/pricing">Pricing</a>
+      <a href="/docs">Docs</a>
+      <a href="/support">Support</a>
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/disclaimer">Disclaimer</a>
+    </nav>
+
+  </div>
 </footer>
 <script>
-    const year = document.getElementById("y");
-    if (year) year.textContent = new Date().getFullYear();
-
-    const effective = document.getElementById("effective-date");
-    if (effective) effective.textContent = new Date().toLocaleDateString();
+    document
+      .querySelectorAll(".site-footer-year")
+      .forEach((element) => {
+        element.textContent =
+          String(new Date().getFullYear());
+      });
   </script>
 
 </body>
