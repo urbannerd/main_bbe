@@ -1,12 +1,39 @@
-/* Shared Bag Builders Exchange navigation */
-.account-header {
-  position: relative;
-  z-index: 2000;
-}
+/* ==================================================
+   SHARED MEMBER NAVIGATION
+   ================================================== */
 
-.account-header-inner {
-  gap: 24px;
-}
+   :root {
+    --member-nav-height: 90px;
+  }
+  
+  .account-header {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+  
+    width: 100%;
+    height: var(--member-nav-height);
+    min-height: var(--member-nav-height);
+    max-height: var(--member-nav-height);
+    box-sizing: border-box;
+  
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(7, 7, 8, 0.96);
+  
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  
+  .account-header-inner {
+    width: min(100% - 32px, 1440px);
+    height: 100%;
+    min-height: 0;
+    margin: 0 auto;
+  
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 
 .account-nav-links {
   display: flex;
