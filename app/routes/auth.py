@@ -1,4 +1,7 @@
-import os 
+import os
+import re
+
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi import Response
 from fastapi.responses import RedirectResponse
@@ -70,6 +73,10 @@ KNOWN_TOOLS = set().union(*PLAN_ACCESS.values())
 
 
 class RegisterRequest(BaseModel):
+    full_name: str
+    username: str
+    city: str
+    state: str
     email: EmailStr
     password: str
 
@@ -86,24 +93,80 @@ def normalize_plan(plan: str | None) -> str:
 def normalize_tool(tool: str) -> str:
     return tool.strip().lower()
 
+##This makes a free user behave like Professional during the active trial without changing their saved plan.
+
+def normalize_utc(value):
+    if value is None:
+        return None
+
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+
+    return value.astimezone(timezone.utc)
+
+
+def has_active_trial(user: User) -> bool:
+    trial_ends_at = normalize_utc(user.trial_ends_at)
+
+    if trial_ends_at is None:
+        return False
+
+    return datetime.now(timezone.utc) < trial_ends_at
+
+
+def get_effective_plan(user: User) -> str:
+    stored_plan = normalize_plan(user.membership_plan)
+
+    if stored_plan in PAID_PLANS:
+        return stored_plan
+
+    if has_active_trial(user):
+        return "professional"
+
+    return "free"
+
 
 def serialize_user(user: User) -> dict:
-    plan = normalize_plan(user.membership_plan)
+    membership_plan = normalize_plan(user.membership_plan)
+    effective_plan = get_effective_plan(user)
+    trial_active = has_active_trial(user)
+
+    trial_started_at = normalize_utc(user.trial_started_at)
+    trial_ends_at = normalize_utc(user.trial_ends_at)
 
     return {
         "id": user.id,
         "email": user.email,
+        "full_name": user.full_name,
+        "username": user.username,
+        "city": user.city,
+        "state": user.state,
         "is_active": user.is_active,
         "created_at": user.created_at,
         "membership_status": user.membership_status,
-        "membership_plan": plan,
+        "membership_plan": membership_plan,
+        "effective_plan": effective_plan,
+        "trial_active": trial_active,
+        "trial_started_at": (
+            trial_started_at.isoformat()
+            if trial_started_at
+            else None
+        ),
+        "trial_ends_at": (
+            trial_ends_at.isoformat()
+            if trial_ends_at
+            else None
+        ),
+        "trial_used": bool(user.trial_used),
 
         "stripe_customer_id": user.stripe_customer_id,
         "stripe_subscription_id": user.stripe_subscription_id,
         "stripe_subscription_status": user.stripe_subscription_status,
         "stripe_price_id": user.stripe_price_id,
 
-        "allowed_tools": sorted(PLAN_ACCESS.get(plan, set())),
+        "allowed_tools": sorted(
+            PLAN_ACCESS.get(effective_plan, set())
+        ),
     }
 
 
@@ -135,14 +198,18 @@ def require_current_user(
 
     return user
 
-
 def require_tool_access(
     user: User,
     tool: str,
 ) -> User:
     normalized_tool = normalize_tool(tool)
-    plan = normalize_plan(user.membership_plan)
-    membership_status = (user.membership_status or "inactive").strip().lower()
+
+    stored_plan = normalize_plan(user.membership_plan)
+    effective_plan = get_effective_plan(user)
+
+    membership_status = (
+        user.membership_status or "inactive"
+    ).strip().lower()
 
     if normalized_tool not in KNOWN_TOOLS:
         raise HTTPException(
@@ -150,26 +217,37 @@ def require_tool_access(
             detail="Unknown platform tool.",
         )
 
-    if plan not in PLAN_ACCESS:
+    if stored_plan not in PLAN_ACCESS:
         raise HTTPException(
             status_code=403,
             detail="Your account has an unrecognized subscription plan.",
         )
 
-    # Paid plans must have a currently active subscription.
-    if plan in PAID_PLANS and membership_status != "active":
+    if effective_plan not in PLAN_ACCESS:
+        raise HTTPException(
+            status_code=403,
+            detail="Your account has an unrecognized access plan.",
+        )
+
+    # A stored paid plan must have an active subscription.
+    # A free account with an active trial does not require one.
+    if (
+        stored_plan in PAID_PLANS
+        and membership_status != "active"
+    ):
         raise HTTPException(
             status_code=403,
             detail="An active subscription is required.",
         )
 
-    if normalized_tool not in PLAN_ACCESS[plan]:
+    if normalized_tool not in PLAN_ACCESS[effective_plan]:
         raise HTTPException(
             status_code=403,
-            detail="Your subscription plan does not include this tool.",
+            detail="Your current access level does not include this tool.",
         )
 
     return user
+
 
 @router.get("/access/{tool}")
 def authorize_tool(
@@ -185,10 +263,44 @@ def authorize_tool(
 @router.post("/register")
 def register_user(
     payload: RegisterRequest,
+    request: Request,
     db: Session = Depends(get_db),
 ):
+
     email = payload.email.lower().strip()
+    full_name = payload.full_name.strip()
+    username = payload.username.strip().lower()
+    city = payload.city.strip()
+    state = payload.state.strip().upper()
+
     password_bytes = payload.password.encode("utf-8")
+
+    if len(full_name) < 2 or len(full_name) > 120:
+        raise HTTPException(
+            status_code=400,
+            detail="Full name must be between 2 and 120 characters.",
+        )
+
+    if not re.fullmatch(r"[a-z0-9_]{3,30}", username):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Username must be 3 to 30 characters and may "
+                "contain only lowercase letters, numbers, and underscores."
+            ),
+        )
+
+    if len(city) < 2 or len(city) > 100:
+        raise HTTPException(
+            status_code=400,
+            detail="City must be between 2 and 100 characters.",
+        )
+
+    if not re.fullmatch(r"[A-Z]{2}", state):
+        raise HTTPException(
+            status_code=400,
+            detail="State must be a valid two-letter abbreviation.",
+        )
 
     if len(payload.password) < 8:
         raise HTTPException(
@@ -202,23 +314,44 @@ def register_user(
             detail="Password must be 72 bytes or fewer.",
         )
 
-    existing_user = (
+    existing_email = (
         db.query(User)
         .filter(User.email == email)
         .first()
     )
 
-    if existing_user:
+    if existing_email:
         raise HTTPException(
             status_code=409,
             detail="An account with that email already exists.",
         )
 
+    existing_username = (
+        db.query(User)
+        .filter(User.username == username)
+        .first()
+    )
+
+    if existing_username:
+        raise HTTPException(
+            status_code=409,
+            detail="That username is already taken.",
+        )
+
+    now = datetime.now(timezone.utc)
+
     user = User(
         email=email,
         password_hash=password_context.hash(payload.password),
+        full_name=full_name,
+        username=username,
+        city=city,
+        state=state,
         membership_plan="free",
         membership_status="inactive",
+        trial_started_at=now,
+        trial_ends_at=now + timedelta(days=7),
+        trial_used=True,
     )
 
     db.add(user)
@@ -230,13 +363,20 @@ def register_user(
 
         raise HTTPException(
             status_code=409,
-            detail="An account with that email already exists.",
+            detail=(
+                "An account with that email or username already exists."
+            ),
         )
 
     db.refresh(user)
+    request.session.clear()
+    request.session["user_id"] = user.id
 
     return {
-        "message": "Account created successfully.",
+        "message": (
+            "Account created successfully. "
+            "Your 7-day Professional trial is active."
+        ),
         "user": serialize_user(user),
     }
 
