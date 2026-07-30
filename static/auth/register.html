@@ -86,6 +86,58 @@
           Enter your information to get started.
         </p>
 <form id="register-form">
+  <div class="form-group">
+    <label for="full-name">Full Name</label>
+    <input
+      id="full-name"
+      name="full_name"
+      class="form-control"
+      type="text"
+      autocomplete="name"
+      maxlength="120"
+      required
+    />
+  </div>
+  
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input
+      id="username"
+      name="username"
+      class="form-control"
+      type="text"
+      autocomplete="username"
+      maxlength="30"
+      required
+    />
+  </div>
+  
+  <div class="form-group">
+    <label for="city">City</label>
+    <input
+      id="city"
+      name="city"
+      class="form-control"
+      type="text"
+      autocomplete="address-level2"
+      maxlength="100"
+      required
+    />
+  </div>
+  
+  <div class="form-group">
+    <label for="state">State</label>
+    <input
+      id="state"
+      name="state"
+      class="form-control"
+      type="text"
+      autocomplete="address-level1"
+      maxlength="2"
+      style="text-transform: uppercase;"
+      required
+    />
+  </div>
 <div class="form-group">
 <label for="email">Email address</label>
 <input autocomplete="email" class="form-control" id="email" name="email" placeholder="you@example.com" required="" type="email"/>

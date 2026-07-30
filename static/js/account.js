@@ -7,6 +7,23 @@ const profileEmail = document.getElementById("profile-email");
 const profileStatus = document.getElementById("profile-status");
 const profileCreatedAt = document.getElementById("profile-created-at");
 const accountYear = document.getElementById("account-year");
+const profileFullName =
+  document.getElementById("profile-full-name");
+
+const profileUsername =
+  document.getElementById("profile-username");
+
+const profileLocation =
+  document.getElementById("profile-location");
+
+const profileEffectivePlan =
+  document.getElementById("profile-effective-plan");
+
+const trialRow =
+  document.getElementById("trial-row");
+
+const profileTrialEnds =
+  document.getElementById("profile-trial-ends");
 
 const qqqAccessBadge = document.getElementById("qqq-access-badge");
 const qqqAccessLink = document.getElementById("qqq-access-link");
@@ -646,23 +663,67 @@ function renderUser(user) {
   if (profileEmail) {
     profileEmail.textContent = email;
   }
-
-  if (profileStatus) {
-    const hasActiveMembership =
-      membershipStatus === "active" ||
-      membershipStatus === "trialing";
+  if (profileFullName) {
+    profileFullName.textContent =
+      user.full_name || "Not provided";
+  }
   
-    profileStatus.textContent =
-      hasActiveMembership
-        ? "Active Membership"
-        : "Inactive Membership";
+  if (profileUsername) {
+    profileUsername.textContent =
+      user.username || "Not provided";
+  }
   
-    profileStatus.dataset.status =
-      hasActiveMembership
-        ? "active"
-        : "inactive";
+  if (profileLocation) {
+    const city = user.city || "";
+    const state = user.state || "";
+  
+    profileLocation.textContent =
+      city && state
+        ? `${city}, ${state}`
+        : "Not provided";
+  }
+  
+  if (profileEffectivePlan) {
+    profileEffectivePlan.textContent =
+      formatMembershipLabel(
+        user.effective_plan ||
+        user.membership_plan
+      );
+  }
+  
+  if (trialRow) {
+    trialRow.hidden = !user.trial_active;
+  }
+  
+  if (
+    profileTrialEnds &&
+    user.trial_active
+  ) {
+    profileTrialEnds.textContent =
+      formatDate(user.trial_ends_at);
   }
 
+  if (profileStatus) {
+    if (user.trial_active) {
+      profileStatus.textContent = "Trial Active";
+      profileStatus.dataset.status = "active";
+    } else {
+      const hasActiveMembership =
+        membershipStatus === "active" ||
+        membershipStatus === "trialing";
+  
+      profileStatus.textContent =
+        hasActiveMembership
+          ? "Active Membership"
+          : "Inactive Membership";
+  
+      profileStatus.dataset.status =
+        hasActiveMembership
+          ? "active"
+          : "inactive";
+    }
+  }
+  
   if (profileCreatedAt) {
     profileCreatedAt.textContent =
       formatDate(user.created_at);
