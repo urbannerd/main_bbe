@@ -51,6 +51,45 @@ class User(Base):
         nullable=False,
     )
 
+    full_name = Column(
+        String(120),
+        nullable=True,
+    )
+
+    username = Column(
+        String(60),
+        nullable=True,
+        unique=True,
+        index=True,
+    )
+
+    city = Column(
+        String(100),
+        nullable=True,
+    )
+
+    state = Column(
+        String(2),
+        nullable=True,
+    )
+
+    trial_started_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    trial_ends_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    trial_used = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
+    )
+    
     qqq_access = Column(
         Boolean,
         default=False,

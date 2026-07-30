@@ -70,17 +70,34 @@ if (registerForm) {
     event.preventDefault();
     showMessage("");
 
+    const fullNameInput = document.getElementById("full-name");
+    const usernameInput = document.getElementById("username");
+    const cityInput = document.getElementById("city");
+    const stateInput = document.getElementById("state");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const confirmPasswordInput =
       document.getElementById("confirm-password");
     const termsInput = document.getElementById("terms");
 
+    const full_name = fullNameInput?.value.trim() || "";
+    const username = usernameInput?.value.trim().toLowerCase() || "";
+    const city = cityInput?.value.trim() || "";
+    const state = stateInput?.value.trim().toUpperCase() || "";
+
     const email = emailInput?.value.trim() || "";
     const password = passwordInput?.value || "";
     const confirmPassword = confirmPasswordInput?.value || "";
 
-    if (!email || !password || !confirmPassword) {
+    if (
+      !full_name ||
+      !username ||
+      !city ||
+      !state ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
       showMessage("Please complete every required field.");
       return;
     }
@@ -120,6 +137,10 @@ if (registerForm) {
         credentials: "same-origin",
         cache: "no-store",
         body: JSON.stringify({
+          full_name,
+          username,
+          city,
+          state,
           email,
           password,
         }),
@@ -135,13 +156,13 @@ if (registerForm) {
       }
 
       showMessage(
-        "Account created. Redirecting to login...",
+        "Account created. Redirecting to your account...",
         "success"
       );
-
+      
       window.setTimeout(() => {
-        window.location.href = "/login";
-      }, 1000);
+        window.location.replace("/account");
+      }, 600);
     } catch (error) {
       console.error("Registration failed:", error);
 
