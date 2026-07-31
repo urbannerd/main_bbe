@@ -203,6 +203,18 @@ def forgot_password_page(request: Request):
         )
 
     return FileResponse("static/auth/forgot-password.html")
+
+@app.get("/reset-password")
+def reset_password_page(request: Request):
+    if request.session.get("user_id"):
+        return RedirectResponse(
+            url="/account",
+            status_code=303,
+        )
+
+    return FileResponse(
+        "static/auth/reset-password.html"
+    )
     
 @app.get("/register")
 def register_page(request: Request):
