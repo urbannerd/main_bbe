@@ -1457,3 +1457,48 @@ body {
     padding: 0 12px;
   }
 }
+
+/* ================================
+   Login and password recovery
+================================ */
+
+.login-password-help {
+  display: flex;
+  justify-content: flex-end;
+  margin: -6px 2px 14px;
+}
+
+.login-password-help a {
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-password-help a:hover,
+.login-password-help a:focus-visible {
+  text-decoration: underline;
+}
+
+.password-reset-note {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.password-reset-note strong {
+  color: var(--text);
+}
+
+.auth-message[data-type="success"] {
+  color: #8ee5af;
+}
+
+.auth-message[data-type="error"] {
+  color: #ff9b9b;
+}
