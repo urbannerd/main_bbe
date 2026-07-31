@@ -245,6 +245,73 @@ if (loginForm) {
   });
 }
 
+const forgotPasswordForm =
+  document.getElementById("forgot-password-form");
+
+if (forgotPasswordForm) {
+  forgotPasswordForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    showMessage("");
+
+    const emailInput = document.getElementById("email");
+    const email = emailInput?.value.trim() || "";
+
+    if (!email) {
+      showMessage(
+        "Enter the email address associated with your account."
+      );
+      return;
+    }
+
+    setFormLoading(forgotPasswordForm, true);
+
+    try {
+      const response = await fetch(
+        "/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          credentials: "same-origin",
+          cache: "no-store",
+          body: JSON.stringify({ email })
+        }
+      );
+
+      const data = await getResponseData(response);
+
+      if (!response.ok) {
+        showMessage(
+          data.detail ||
+            "Unable to submit the password reset request."
+        );
+        return;
+      }
+
+      showMessage(
+        data.message ||
+          "If an account exists for that email address, password reset instructions have been sent.",
+        "success"
+      );
+
+      forgotPasswordForm.reset();
+    } catch (error) {
+      console.error(
+        "Password reset request failed:",
+        error
+      );
+
+      showMessage(
+        "Unable to connect to the server. Please try again."
+      );
+    } finally {
+      setFormLoading(forgotPasswordForm, false);
+    }
+  });
+}
+
 document
   .querySelectorAll(".site-footer-year")
   .forEach((element) => {
