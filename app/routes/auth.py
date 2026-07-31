@@ -1,17 +1,22 @@
 import os
 import re
+import hashlib
+import secrets
+import smtplib
+
+from email.message import EmailMessage
+from fastapi import BackgroundTasks
 
 from datetime import datetime, timedelta, timezone
-from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi import Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
+from sqlalchemy import func
 from app.database import get_db
-from app.models import User
+from app.models import PasswordResetToken, User
 
 
 router = APIRouter(
@@ -24,6 +29,156 @@ password_context = CryptContext(
     deprecated="auto",
 )
 
+def send_password_reset_email(
+    recipient_email: str,
+    reset_link: str,
+) -> None:
+    smtp_host = os.getenv("SMTP_HOST")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_username = os.getenv("SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")
+    smtp_from_email = os.getenv("SMTP_FROM_EMAIL")
+    smtp_from_name = os.getenv(
+        "SMTP_FROM_NAME",
+        "Bag Builders Exchange",
+    )
+
+    missing_settings = [
+        name
+        for name, value in {
+            "SMTP_HOST": smtp_host,
+            "SMTP_USERNAME": smtp_username,
+            "SMTP_PASSWORD": smtp_password,
+            "SMTP_FROM_EMAIL": smtp_from_email,
+        }.items()
+        if not value
+    ]
+
+    if missing_settings:
+        raise RuntimeError(
+            "Missing SMTP settings: "
+            + ", ".join(missing_settings)
+        )
+
+    message = EmailMessage()
+
+    message["Subject"] = (
+        "Reset your Bag Builders Exchange password"
+    )
+    message["From"] = (
+        f"{smtp_from_name} <{smtp_from_email}>"
+    )
+    message["To"] = recipient_email
+
+    message.set_content(
+        f"""
+A password reset was requested for your
+Bag Builders Exchange account.
+
+Use the link below to reset your password:
+
+{reset_link}
+
+This link expires in 30 minutes and can only
+be used once.
+
+If you did not request this password reset,
+you can safely ignore this email.
+""".strip()
+    )
+
+    message.add_alternative(
+        f"""
+<!doctype html>
+<html lang="en">
+  <body style="
+    margin: 0;
+    padding: 32px 18px;
+    background: #070708;
+    color: #e8e8ea;
+    font-family: Arial, sans-serif;
+  ">
+    <div style="
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 32px;
+      border: 1px solid rgba(214, 162, 26, 0.38);
+      border-radius: 18px;
+      background: #111116;
+    ">
+      <h1 style="
+        margin: 0 0 18px;
+        color: #ffcc3c;
+        font-size: 28px;
+      ">
+        Reset Your Password
+      </h1>
+
+      <p style="
+        margin: 0 0 18px;
+        color: #e8e8ea;
+        line-height: 1.6;
+      ">
+        A password reset was requested for your
+        Bag Builders Exchange account.
+      </p>
+
+      <p style="margin: 28px 0;">
+        <a
+          href="{reset_link}"
+          style="
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 12px;
+            background: #d6a21a;
+            color: #070708;
+            font-weight: 700;
+            text-decoration: none;
+          "
+        >
+          Reset Password
+        </a>
+      </p>
+
+      <p style="
+        margin: 0 0 14px;
+        color: #a9a9b2;
+        line-height: 1.6;
+      ">
+        This link expires in 30 minutes and can
+        only be used once.
+      </p>
+
+      <p style="
+        margin: 0;
+        color: #a9a9b2;
+        line-height: 1.6;
+      ">
+        If you did not request this reset, you can
+        safely ignore this email.
+      </p>
+    </div>
+  </body>
+</html>
+""".strip(),
+        subtype="html",
+    )
+
+    with smtplib.SMTP(
+        smtp_host,
+        smtp_port,
+        timeout=30,
+    ) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+
+        smtp.login(
+            smtp_username,
+            smtp_password,
+        )
+
+        smtp.send_message(message)
 
 PLAN_ACCESS = {
     "free": {
@@ -85,6 +240,12 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+class ResetPasswordRequest(BaseModel):
+    token: str
+    password: str
+    confirm_password: str
 
 def normalize_plan(plan: str | None) -> str:
     return (plan or "free").strip().lower()
@@ -194,6 +355,19 @@ def require_current_user(
         raise HTTPException(
             status_code=401,
             detail="Your session is no longer valid.",
+        )
+
+    session_version = request.session.get("session_version")
+
+    if session_version != user.session_version:
+        request.session.clear()
+
+        raise HTTPException(
+            status_code=401,
+            detail=(
+                "Your session has expired. "
+                "Please log in again."
+            ),
         )
 
     return user
@@ -371,6 +545,7 @@ def register_user(
     db.refresh(user)
     request.session.clear()
     request.session["user_id"] = user.id
+    request.session["session_version"] = user.session_version
 
     return {
         "message": (
@@ -424,12 +599,270 @@ def login_user(
 
     request.session.clear()
     request.session["user_id"] = user.id
+    request.session["session_version"] = user.session_version
 
     return {
         "message": "Login successful.",
         "user": serialize_user(user),
     }
 
+@router.post("/forgot-password")
+def forgot_password(
+    payload: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    email = payload.email.lower().strip()
+    now = datetime.now(timezone.utc)
+
+    neutral_message = {
+        "message": (
+            "If an account exists for that email address, "
+            "password reset instructions have been sent."
+        )
+    }
+
+    # ---------------------------------------------------------
+    # Clean up reset records that are more than two days old.
+    # ---------------------------------------------------------
+
+    cleanup_cutoff = now - timedelta(days=2)
+
+    db.query(PasswordResetToken).filter(
+        PasswordResetToken.expires_at < cleanup_cutoff,
+    ).delete(synchronize_session=False)
+
+    db.query(PasswordResetToken).filter(
+        PasswordResetToken.used_at.is_not(None),
+        PasswordResetToken.used_at < cleanup_cutoff,
+    ).delete(synchronize_session=False)
+
+    db.commit()
+
+    user = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
+
+    # Always return the same response when the account does not exist.
+    if not user:
+        return neutral_message
+
+    # ---------------------------------------------------------
+    # Rate limit 1: no more than one request every 60 seconds.
+    # ---------------------------------------------------------
+
+    one_minute_ago = now - timedelta(minutes=1)
+
+    recent_request = (
+        db.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.created_at >= one_minute_ago,
+        )
+        .first()
+    )
+
+    if recent_request:
+        return neutral_message
+
+    # ---------------------------------------------------------
+    # Rate limit 2: no more than five requests per hour.
+    # ---------------------------------------------------------
+
+    one_hour_ago = now - timedelta(hours=1)
+
+    hourly_request_count = (
+        db.query(func.count(PasswordResetToken.id))
+        .filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.created_at >= one_hour_ago,
+        )
+        .scalar()
+        or 0
+    )
+
+    if hourly_request_count >= 5:
+        return neutral_message
+
+    # ---------------------------------------------------------
+    # Invalidate any older unused reset links.
+    # Keep the records so they still count toward rate limits.
+    # ---------------------------------------------------------
+
+    db.query(PasswordResetToken).filter(
+        PasswordResetToken.user_id == user.id,
+        PasswordResetToken.used_at.is_(None),
+    ).update(
+        {
+            PasswordResetToken.used_at: now,
+        },
+        synchronize_session=False,
+    )
+
+    # ---------------------------------------------------------
+    # Generate and store the new reset token.
+    # ---------------------------------------------------------
+
+    raw_token = secrets.token_urlsafe(32)
+
+    token_hash = hashlib.sha256(
+        raw_token.encode("utf-8")
+    ).hexdigest()
+
+    reset_token = PasswordResetToken(
+        user_id=user.id,
+        token_hash=token_hash,
+        expires_at=now + timedelta(minutes=30),
+    )
+
+    db.add(reset_token)
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+
+        # Do not expose internal errors or account existence.
+        return neutral_message
+
+    # ---------------------------------------------------------
+    # Build the reset URL and send the email.
+    # ---------------------------------------------------------
+
+    app_url = os.getenv(
+        "APP_BASE_URL",
+        "http://127.0.0.1:8000",
+    ).rstrip("/")
+
+    reset_link = (
+        f"{app_url}/reset-password"
+        f"?token={raw_token}"
+    )
+
+    background_tasks.add_task(
+        send_password_reset_email,
+        user.email,
+        reset_link,
+    )
+
+    return neutral_message
+
+@router.post("/reset-password")
+def reset_password(
+    payload: ResetPasswordRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    raw_token = payload.token.strip()
+    password = payload.password
+    confirm_password = payload.confirm_password
+
+    if not raw_token:
+        raise HTTPException(
+            status_code=400,
+            detail="The password reset token is missing.",
+        )
+
+    if password != confirm_password:
+        raise HTTPException(
+            status_code=400,
+            detail="Passwords do not match.",
+        )
+
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters.",
+        )
+
+    if len(password.encode("utf-8")) > 72:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be 72 bytes or fewer.",
+        )
+
+    token_hash = hashlib.sha256(
+        raw_token.encode("utf-8")
+    ).hexdigest()
+
+    reset_record = (
+        db.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.token_hash == token_hash,
+            PasswordResetToken.used_at.is_(None),
+        )
+        .first()
+    )
+
+    if not reset_record:
+        raise HTTPException(
+            status_code=400,
+            detail="This password reset link is invalid or has already been used.",
+        )
+
+    now = datetime.now(timezone.utc)
+    expires_at = normalize_utc(reset_record.expires_at)
+
+    if expires_at is None or now >= expires_at:
+        reset_record.used_at = now
+        db.commit()
+
+        raise HTTPException(
+            status_code=400,
+            detail="This password reset link has expired.",
+        )
+
+    user = (
+        db.query(User)
+        .filter(User.id == reset_record.user_id)
+        .first()
+    )
+
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=400,
+            detail="Unable to reset the password for this account.",
+        )
+
+    user.password_hash = password_context.hash(password)
+    user.session_version = (
+        user.session_version or 1
+    ) + 1
+    reset_record.used_at = now
+
+    # Invalidate every other unused reset token for this user.
+    db.query(PasswordResetToken).filter(
+        PasswordResetToken.user_id == user.id,
+        PasswordResetToken.id != reset_record.id,
+        PasswordResetToken.used_at.is_(None),
+    ).update(
+        {
+            PasswordResetToken.used_at: now,
+        },
+        synchronize_session=False,
+    )
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to update the password. Please try again.",
+        )
+
+    # Clear any current browser session after the password changes.
+    request.session.clear()
+
+    return {
+        "message": (
+            "Your password has been reset successfully. "
+            "You can now log in with your new password."
+        )
+    }
 
 @router.get("/me")
 def get_current_user(
