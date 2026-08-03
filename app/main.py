@@ -19,6 +19,7 @@ from app.routes.auth import (
 )
 from app.routes.preview import router as preview_router
 from app.routes.stripe_routes import router as stripe_router
+from app.routes.admin import require_admin, router as admin_router
 
 SESSION_SECRET = os.getenv("SESSION_SECRET")
 APP_ENV = os.getenv("APP_ENV", "development").lower()
@@ -61,6 +62,8 @@ app.add_middleware(
 app.include_router(preview_router, prefix="/api")
 app.include_router(auth_router)
 app.include_router(stripe_router)
+app.include_router(admin_router)
+
 
 
 app.mount(
@@ -241,3 +244,21 @@ def account_page(request: Request):
         )
 
     return FileResponse("static/auth/account.html")
+
+
+@app.get("/admin")
+@app.get("/admin/")
+def admin_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    try:
+        require_admin(request, db)
+    except Exception as error:
+        status_code = getattr(error, "status_code", 500)
+        if status_code == 401:
+            return RedirectResponse(url="/login", status_code=303)
+        raise
+
+    return FileResponse("static/admin/index.html")
+
