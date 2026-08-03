@@ -571,6 +571,53 @@ async def stripe_webhook(
                 )
                 db.commit()
 
+
+        elif event_type == "invoice.paid":
+            customer_id = normalize_stripe_id(
+                stripe_value(event_object, "customer")
+            )
+
+            # Older Stripe invoice payloads expose "subscription"
+            # directly. Newer API versions place it under
+            # parent.subscription_details.subscription.
+            subscription_id = normalize_stripe_id(
+                stripe_value(event_object, "subscription")
+            )
+
+            if not subscription_id:
+                parent = stripe_value(event_object, "parent")
+                subscription_details = stripe_value(
+                    parent,
+                    "subscription_details",
+                )
+
+                subscription_id = normalize_stripe_id(
+                    stripe_value(
+                        subscription_details,
+                        "subscription",
+                    )
+                )
+
+            user = (
+                db.query(User)
+                .filter(
+                    User.stripe_customer_id == customer_id
+                )
+                .first()
+            )
+
+            if user and subscription_id:
+                subscription = stripe.Subscription.retrieve(
+                    subscription_id
+                )
+
+                apply_subscription_to_user(
+                    user,
+                    subscription,
+                )
+
+                db.commit()
+
         elif event_type == "invoice.payment_failed":
             customer_id = normalize_stripe_id(
                 stripe_value(event_object, "customer")
