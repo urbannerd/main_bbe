@@ -217,10 +217,14 @@ def create_checkout_session(
                 "quantity": 1,
             }
         ],
+        "automatic_tax": {
+            "enabled": True,
+        },
+        "billing_address_collection": "required",
         "success_url": (
             f"{APP_BASE_URL}/account"
             "?checkout=success"
-            "&session_id={{CHECKOUT_SESSION_ID}}"
+            "&session_id={CHECKOUT_SESSION_ID}"
         ),
         "cancel_url": (
             f"{APP_BASE_URL}/account"
@@ -241,9 +245,10 @@ def create_checkout_session(
     }
 
     if user.stripe_customer_id:
-        session_options["customer"] = (
-            user.stripe_customer_id
-        )
+        session_options["customer"] = user.stripe_customer_id
+        session_options["customer_update"] = {
+            "address": "auto",
+        }
     else:
         session_options["customer_email"] = user.email
 
@@ -345,9 +350,13 @@ def change_subscription(
                     "quantity": 1,
                 }
             ],
+            "automatic_tax": {
+                "enabled": True,
+            },
+            "billing_address_collection": "required",
             "success_url": (
                 f"{APP_BASE_URL}/account"
-                "?checkout=success&session_id={{CHECKOUT_SESSION_ID}}"
+                "?checkout=success&session_id={CHECKOUT_SESSION_ID}"
             ),
             "cancel_url": (
                 f"{APP_BASE_URL}/account"
@@ -370,6 +379,9 @@ def change_subscription(
             checkout_params["customer"] = (
                 user.stripe_customer_id
             )
+            checkout_params["customer_update"] = {
+                "address": "auto",
+            }
         else:
             checkout_params["customer_email"] = user.email
 
@@ -433,6 +445,9 @@ def change_subscription(
                     "quantity": 1,
                 }
             ],
+            automatic_tax={
+                "enabled": True,
+            },
             proration_behavior="always_invoice",
             payment_behavior="error_if_incomplete",
             metadata={
