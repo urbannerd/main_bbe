@@ -22,6 +22,7 @@ from app.routes.preview import router as preview_router
 from app.routes.stripe_routes import router as stripe_router
 from app.routes.admin import require_admin, router as admin_router
 
+
 SESSION_SECRET = os.getenv("SESSION_SECRET")
 APP_ENV = os.getenv("APP_ENV", "development").lower()
 IS_PRODUCTION = APP_ENV == "production"
@@ -111,7 +112,19 @@ app.mount(
     name="static",
 )
 
+@app.get("/api/public-config")
+def public_config():
+    return {
+        "turnstile_site_key": os.getenv(
+            "TURNSTILE_SITE_KEY",
+            "",
+        ),
+    }
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse("static/assets/favicon.ico")
+    
 @app.get("/")
 def landing_page():
     return FileResponse("static/index.html")

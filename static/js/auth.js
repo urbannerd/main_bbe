@@ -2,6 +2,51 @@ const authMessage = document.getElementById("auth-message");
 const registerForm = document.getElementById("register-form");
 const loginForm = document.getElementById("login-form");
 
+let turnstileWidgetId = null;
+
+window.onTurnstileLoad = async function () {
+  const widgetContainer =
+    document.getElementById("turnstile-widget");
+
+  if (!widgetContainer) {
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/public-config", {
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to load public configuration.");
+    }
+
+    const config = await response.json();
+    const siteKey = config.turnstile_site_key;
+
+    if (!siteKey) {
+      throw new Error("Turnstile site key is missing.");
+    }
+
+    turnstileWidgetId = window.turnstile.render(
+      widgetContainer,
+      {
+        sitekey: siteKey,
+        theme: "dark",
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Unable to initialize Turnstile:",
+      error
+    );
+
+    showMessage(
+      "The security check could not load. Please refresh the page."
+    );
+  }
+};
 
 function showMessage(message, type = "error") {
   if (!authMessage) {
@@ -26,6 +71,13 @@ async function getResponseData(response) {
   }
 }
 
+function getTurnstileToken() {
+  const input = document.querySelector(
+    '[name="cf-turnstile-response"]'
+  );
+
+  return input?.value || "";
+}
 
 function setFormLoading(form, isLoading) {
   const submitButton = form.querySelector(
@@ -126,6 +178,13 @@ if (registerForm) {
       return;
     }
 
+    const turnstile_token = getTurnstileToken();
+
+    if (!turnstile_token) {
+      showMessage("Please complete the security check.");
+      return;
+    }
+
     setFormLoading(registerForm, true);
 
     try {
@@ -143,12 +202,19 @@ if (registerForm) {
           state,
           email,
           password,
+          turnstile_token,
         }),
       });
 
       const data = await getResponseData(response);
 
       if (!response.ok) {
+        if (
+          window.turnstile &&
+          turnstileWidgetId !== null
+        ) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
         showMessage(
           data.detail || "Unable to create your account."
         );
@@ -192,6 +258,13 @@ if (loginForm) {
       return;
     }
 
+    const turnstile_token = getTurnstileToken();
+
+    if (!turnstile_token) {
+      showMessage("Please complete the security check.");
+      return;
+    }
+
     setFormLoading(loginForm, true);
 
     try {
@@ -205,12 +278,19 @@ if (loginForm) {
         body: JSON.stringify({
           email,
           password,
+          turnstile_token,
         }),
       });
 
       const data = await getResponseData(response);
 
       if (!response.ok) {
+        if (
+          window.turnstile &&
+          turnstileWidgetId !== null
+        ) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
         showMessage(
           data.detail || "Unable to log in."
         );
@@ -263,6 +343,13 @@ if (forgotPasswordForm) {
       return;
     }
 
+    const turnstile_token = getTurnstileToken();
+
+    if (!turnstile_token) {
+      showMessage("Please complete the security check.");
+      return;
+    }
+
     setFormLoading(forgotPasswordForm, true);
 
     try {
@@ -276,13 +363,22 @@ if (forgotPasswordForm) {
           },
           credentials: "same-origin",
           cache: "no-store",
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ 
+            email,
+            turnstile_token,
+           }),
         }
       );
 
       const data = await getResponseData(response);
 
       if (!response.ok) {
+        if (
+          window.turnstile &&
+          turnstileWidgetId !== null
+        ) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
         showMessage(
           data.detail ||
             "Unable to submit the password reset request."
