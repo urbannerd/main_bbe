@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.database import get_db
 from app.models import PasswordResetToken, User
+from app.security.turnstile import verify_turnstile
 
 
 router = APIRouter(
@@ -234,14 +235,17 @@ class RegisterRequest(BaseModel):
     state: str
     email: EmailStr
     password: str
+    turnstile_token: str
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    turnstile_token: str
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+    turnstile_token: str
 class ResetPasswordRequest(BaseModel):
     token: str
     password: str
@@ -435,11 +439,20 @@ def authorize_tool(
     return Response(status_code=204)
     
 @router.post("/register")
-def register_user(
+async def register_user(
     payload: RegisterRequest,
     request: Request,
     db: Session = Depends(get_db),
 ):
+
+    if not await verify_turnstile(
+        payload.turnstile_token,
+        request.client.host if request.client else None,
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Security verification failed. Please try again.",
+        )
 
     email = payload.email.lower().strip()
     full_name = payload.full_name.strip()
@@ -557,12 +570,21 @@ def register_user(
 
 
 @router.post("/login")
-def login_user(
+async def login_user(
     payload: LoginRequest,
     request: Request,
     db: Session = Depends(get_db),
 ):
     email = payload.email.lower().strip()
+
+    if not await verify_turnstile(
+        payload.turnstile_token,
+        request.client.host if request.client else None,
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Security verification failed. Please try again.",
+        )
 
     if len(payload.password.encode("utf-8")) > 72:
         raise HTTPException(
@@ -607,11 +629,22 @@ def login_user(
     }
 
 @router.post("/forgot-password")
-def forgot_password(
+async def forgot_password(
     payload: ForgotPasswordRequest,
+    request: Request,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
+
+    if not await verify_turnstile(
+        payload.turnstile_token,
+        request.client.host if request.client else None,
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Security verification failed. Please try again.",
+        )
+        
     email = payload.email.lower().strip()
     now = datetime.now(timezone.utc)
 
