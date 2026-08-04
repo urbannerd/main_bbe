@@ -14,3 +14,4 @@ httpx
 requests
 alembic==1.18.5
 sentry-sdk==2.66.0
+httpx

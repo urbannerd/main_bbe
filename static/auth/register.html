@@ -9,6 +9,10 @@
 <link href="/assets/styles.css" rel="stylesheet"/>
 <link href="/static/auth.css" rel="stylesheet"/>
 <script defer="" src="/static/js/auth.js"></script>
+<script
+    defer
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit">
+</script>
 <link href="/static/site-nav.css?v=1" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=1"></script></head>
 <body>
 <header class="account-header">
@@ -159,6 +163,7 @@
               and <a href="/disclaimer">Disclaimer</a>.
             </span>
 </label>
+<div id="turnstile-widget"></div>
 <button class="btn primary auth-button" type="submit">
             Create account
           </button>
