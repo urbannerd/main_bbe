@@ -1,4 +1,5 @@
 import os
+import sentry_sdk
 
 from dotenv import load_dotenv
 
@@ -24,6 +25,32 @@ from app.routes.admin import require_admin, router as admin_router
 SESSION_SECRET = os.getenv("SESSION_SECRET")
 APP_ENV = os.getenv("APP_ENV", "development").lower()
 IS_PRODUCTION = APP_ENV == "production"
+
+SENTRY_DSN = os.getenv("SENTRY_DSN")
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment=os.getenv(
+            "SENTRY_ENVIRONMENT",
+            APP_ENV,
+        ),
+        release=os.getenv("SENTRY_RELEASE"),
+        send_default_pii=False,
+        sample_rate=1.0,
+        traces_sample_rate=float(
+            os.getenv(
+                "SENTRY_TRACES_SAMPLE_RATE",
+                "0.0",
+            )
+        ),
+    )
+
+    sentry_sdk.set_tag("application", "main_bbe")
+    sentry_sdk.set_tag(
+        "service",
+        os.getenv("SENTRY_SERVICE_NAME", "main_bbe"),
+    )
 
 if not SESSION_SECRET:
     raise RuntimeError(
