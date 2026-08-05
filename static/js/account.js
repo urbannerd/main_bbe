@@ -511,6 +511,7 @@ function renderSubscriptionDetails({
   membershipStatus,
   cancelAtPeriodEnd,
   currentPeriodEnd,
+  trialActive = false,
 }) {
   const formattedPlan =
     formatMembershipLabel(membershipPlan);
@@ -566,9 +567,11 @@ function renderSubscriptionDetails({
     hasValidPeriodEnd
   ) {
     subscriptionRenewalLabel.textContent =
-      cancelAtPeriodEnd
-        ? "Access Until"
-        : "Renews On";
+      trialActive
+        ? "Trial Ends"
+        : cancelAtPeriodEnd
+          ? "Access Until"
+          : "Renews On";
   }
 
   if (
@@ -615,6 +618,19 @@ function renderUser(user) {
     user.membership_plan || "free"
   ).toLowerCase();
 
+  const trialActive =
+    user.trial_active === true;
+
+  const displayedMembershipPlan =
+    trialActive
+      ? "professional trial"
+      : membershipPlan;
+
+  const displayedMembershipStatus =
+    trialActive
+      ? "trial active"
+      : membershipStatus;
+
   const allowedTools =
     Array.isArray(user.allowed_tools)
       ? user.allowed_tools
@@ -637,10 +653,14 @@ function renderUser(user) {
 
   if (accountStatus) {
     const hasActiveMembership =
+      trialActive ||
       membershipStatus === "active" ||
       membershipStatus === "trialing";
-
-    if (
+  
+    if (trialActive) {
+      accountStatus.textContent =
+        "Professional trial active";
+    } else if (
       hasActiveMembership &&
       cancelAtPeriodEnd
     ) {
@@ -653,7 +673,7 @@ function renderUser(user) {
       accountStatus.textContent =
         "Inactive membership";
     }
-
+  
     accountStatus.dataset.status =
       hasActiveMembership
         ? "active"
@@ -790,10 +810,15 @@ function renderUser(user) {
   });
 
   renderSubscriptionDetails({
-    membershipPlan,
-    membershipStatus,
-    cancelAtPeriodEnd,
-    currentPeriodEnd,
+    membershipPlan: displayedMembershipPlan,
+    membershipStatus: displayedMembershipStatus,
+    cancelAtPeriodEnd:
+      trialActive ? false : cancelAtPeriodEnd,
+    currentPeriodEnd:
+      trialActive
+        ? user.trial_ends_at
+        : currentPeriodEnd,
+    trialActive,
   });
 
   if (manageSubscription) {

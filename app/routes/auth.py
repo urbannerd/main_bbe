@@ -16,8 +16,15 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.database import get_db
-from app.models import PasswordResetToken, User
+from app.models import (
+    EmailVerificationToken,
+    PasswordResetToken,
+    User,
+)
 from app.security.turnstile import verify_turnstile
+from app.security.email_verification import (
+    generate_email_verification_token,
+)
 
 
 router = APIRouter(
@@ -180,6 +187,155 @@ you can safely ignore this email.
         )
 
         smtp.send_message(message)
+    
+def send_email_verification_email(
+        recipient_email: str,
+        verification_link: str,
+    ) -> None:
+        smtp_host = os.getenv("SMTP_HOST")
+        smtp_port = int(os.getenv("SMTP_PORT", "587"))
+        smtp_username = os.getenv("SMTP_USERNAME")
+        smtp_password = os.getenv("SMTP_PASSWORD")
+        smtp_from_email = os.getenv("SMTP_FROM_EMAIL")
+        smtp_from_name = os.getenv(
+            "SMTP_FROM_NAME",
+            "Bag Builders Exchange",
+        )
+
+        missing_settings = [
+            name
+            for name, value in {
+                "SMTP_HOST": smtp_host,
+                "SMTP_USERNAME": smtp_username,
+                "SMTP_PASSWORD": smtp_password,
+                "SMTP_FROM_EMAIL": smtp_from_email,
+            }.items()
+            if not value
+        ]
+
+        if missing_settings:
+            raise RuntimeError(
+                "Missing SMTP settings: "
+                + ", ".join(missing_settings)
+            )
+
+        message = EmailMessage()
+
+        message["Subject"] = (
+            "Verify your Bag Builders Exchange account"
+        )
+        message["From"] = (
+            f"{smtp_from_name} <{smtp_from_email}>"
+        )
+        message["To"] = recipient_email
+
+        message.set_content(
+            f"""
+    Thanks for creating your Bag Builders Exchange account.
+
+    Use the link below to verify your email address:
+
+    {verification_link}
+
+    This link expires in 24 hours and can only be used once.
+
+    If you did not create this account, you can safely ignore this email.
+    """.strip()
+        )
+
+        message.add_alternative(
+            f"""
+    <!doctype html>
+    <html lang="en">
+    <body style="
+        margin: 0;
+        padding: 32px 18px;
+        background: #070708;
+        color: #e8e8ea;
+        font-family: Arial, sans-serif;
+    ">
+        <div style="
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 32px;
+        border: 1px solid rgba(214, 162, 26, 0.38);
+        border-radius: 18px;
+        background: #111116;
+        ">
+        <h1 style="
+            margin: 0 0 18px;
+            color: #ffcc3c;
+            font-size: 28px;
+        ">
+            Verify Your Email
+        </h1>
+
+        <p style="
+            margin: 0 0 18px;
+            color: #e8e8ea;
+            line-height: 1.6;
+        ">
+            Thanks for creating your Bag Builders Exchange account.
+            Verify your email address to activate your account and
+            begin your 7-day Professional trial.
+        </p>
+
+        <p style="margin: 28px 0;">
+            <a
+            href="{verification_link}"
+            style="
+                display: inline-block;
+                padding: 14px 22px;
+                border-radius: 12px;
+                background: #d6a21a;
+                color: #070708;
+                font-weight: 700;
+                text-decoration: none;
+            "
+            >
+            Verify Email
+            </a>
+        </p>
+
+        <p style="
+            margin: 0 0 14px;
+            color: #a9a9b2;
+            line-height: 1.6;
+        ">
+            This link expires in 24 hours and can only be used once.
+        </p>
+
+        <p style="
+            margin: 0;
+            color: #a9a9b2;
+            line-height: 1.6;
+        ">
+            If you did not create this account, you can safely ignore
+            this email.
+        </p>
+        </div>
+    </body>
+    </html>
+    """.strip(),
+            subtype="html",
+        )
+
+        with smtplib.SMTP(
+            smtp_host,
+            smtp_port,
+            timeout=30,
+        ) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+
+            smtp.login(
+                smtp_username,
+                smtp_password,
+            )
+
+            smtp.send_message(message)
+
 
 PLAN_ACCESS = {
     "free": {
@@ -251,6 +407,10 @@ class ResetPasswordRequest(BaseModel):
     password: str
     confirm_password: str
 
+class ResendVerificationRequest(BaseModel):
+    email: EmailStr
+    turnstile_token: str
+
 def normalize_plan(plan: str | None) -> str:
     return (plan or "free").strip().lower()
 
@@ -307,6 +467,7 @@ def serialize_user(user: User) -> dict:
         "city": user.city,
         "state": user.state,
         "is_active": user.is_active,
+        "email_verified": bool(user.email_verified),
         "created_at": user.created_at,
         "membership_status": user.membership_status,
         "membership_plan": membership_plan,
@@ -442,6 +603,7 @@ def authorize_tool(
 async def register_user(
     payload: RegisterRequest,
     request: Request,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
 
@@ -525,7 +687,9 @@ async def register_user(
             detail="That username is already taken.",
         )
 
-    now = datetime.now(timezone.utc)
+    raw_token, token_hash, expires_at = (
+        generate_email_verification_token()
+    )
 
     user = User(
         email=email,
@@ -536,15 +700,27 @@ async def register_user(
         state=state,
         membership_plan="free",
         membership_status="inactive",
-        trial_started_at=now,
-        trial_ends_at=now + timedelta(days=7),
-        trial_used=True,
+        email_verified=False,
+        trial_started_at=None,
+        trial_ends_at=None,
+        trial_used=False,
     )
 
     db.add(user)
 
     try:
+        # Assign user.id without committing yet.
+        db.flush()
+
+        verification_token = EmailVerificationToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+        )
+
+        db.add(verification_token)
         db.commit()
+
     except IntegrityError:
         db.rollback()
 
@@ -555,20 +731,255 @@ async def register_user(
             ),
         )
 
-    db.refresh(user)
+    except Exception:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Unable to create your account. Please try again."
+            ),
+        )
+
+    app_url = os.getenv(
+        "APP_BASE_URL",
+        "http://127.0.0.1:8000",
+    ).rstrip("/")
+
+    verification_link = (
+        f"{app_url}/api/auth/verify-email"
+        f"?token={raw_token}"
+    )
+
+    background_tasks.add_task(
+        send_email_verification_email,
+        user.email,
+        verification_link,
+    )
+
+    request.session.clear()
+
+    return {
+        "message": (
+            "Your account was created. "
+            "Please check your email to verify your account."
+        ),
+        "verification_required": True,
+    }
+
+
+@router.get("/verify-email")
+def verify_email(
+    token: str,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    raw_token = token.strip()
+
+    if not raw_token:
+        raise HTTPException(
+            status_code=400,
+            detail="The email verification token is missing.",
+        )
+
+    token_hash = hashlib.sha256(
+        raw_token.encode("utf-8")
+    ).hexdigest()
+
+    verification_record = (
+        db.query(EmailVerificationToken)
+        .filter(
+            EmailVerificationToken.token_hash == token_hash,
+        )
+        .first()
+    )
+
+    if not verification_record:
+        raise HTTPException(
+            status_code=400,
+            detail="This email verification link is invalid.",
+        )
+
+    now = datetime.now(timezone.utc)
+
+    if verification_record.used_at is not None:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "This email verification link has already been used."
+            ),
+        )
+
+    expires_at = normalize_utc(
+        verification_record.expires_at
+    )
+
+    if expires_at is None or now >= expires_at:
+        verification_record.used_at = now
+        db.commit()
+
+        raise HTTPException(
+            status_code=400,
+            detail="This email verification link has expired.",
+        )
+
+    user = (
+        db.query(User)
+        .filter(User.id == verification_record.user_id)
+        .first()
+    )
+
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=400,
+            detail="Unable to verify this account.",
+        )
+
+    user.email_verified = True
+
+    if not user.trial_used:
+        user.trial_started_at = now
+        user.trial_ends_at = now + timedelta(days=7)
+        user.trial_used = True
+
+    verification_record.used_at = now
+
+    db.query(EmailVerificationToken).filter(
+        EmailVerificationToken.user_id == user.id,
+        EmailVerificationToken.id != verification_record.id,
+        EmailVerificationToken.used_at.is_(None),
+    ).update(
+        {
+            EmailVerificationToken.used_at: now,
+        },
+        synchronize_session=False,
+    )
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Unable to verify your email. Please try again."
+            ),
+        )
+
     request.session.clear()
     request.session["user_id"] = user.id
     request.session["session_version"] = user.session_version
 
-    return {
+    return RedirectResponse(
+        url="/account",
+        status_code=303,
+    )
+
+@router.post("/resend-verification")
+async def resend_verification_email(
+    payload: ResendVerificationRequest,
+    request: Request,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    if not await verify_turnstile(
+        payload.turnstile_token,
+        request.client.host if request.client else None,
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Security verification failed. Please try again.",
+        )
+
+    email = payload.email.lower().strip()
+    now = datetime.now(timezone.utc)
+
+    neutral_response = {
         "message": (
-            "Account created successfully. "
-            "Your 7-day Professional trial is active."
-        ),
-        "user": serialize_user(user),
+            "If an unverified account exists for that email address, "
+            "a new verification email has been sent."
+        )
     }
 
+    user = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
 
+    if not user or user.email_verified or not user.is_active:
+        return neutral_response
+
+    # Limit verification email requests to once per minute.
+    one_minute_ago = now - timedelta(minutes=1)
+
+    recent_token = (
+        db.query(EmailVerificationToken)
+        .filter(
+            EmailVerificationToken.user_id == user.id,
+            EmailVerificationToken.created_at >= one_minute_ago,
+        )
+        .first()
+    )
+
+    if recent_token:
+        return neutral_response
+
+    # Invalidate earlier unused verification links.
+    db.query(EmailVerificationToken).filter(
+        EmailVerificationToken.user_id == user.id,
+        EmailVerificationToken.used_at.is_(None),
+    ).update(
+        {
+            EmailVerificationToken.used_at: now,
+        },
+        synchronize_session=False,
+    )
+
+    raw_token, token_hash, expires_at = (
+        generate_email_verification_token()
+    )
+
+    verification_token = EmailVerificationToken(
+        user_id=user.id,
+        token_hash=token_hash,
+        expires_at=expires_at,
+    )
+
+    db.add(verification_token)
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Unable to send a verification email. "
+                "Please try again."
+            ),
+        )
+
+    app_url = os.getenv(
+        "APP_BASE_URL",
+        "http://127.0.0.1:8000",
+    ).rstrip("/")
+
+    verification_link = (
+        f"{app_url}/api/auth/verify-email"
+        f"?token={raw_token}"
+    )
+
+    background_tasks.add_task(
+        send_email_verification_email,
+        user.email,
+        verification_link,
+    )
+
+    return neutral_response
+    
 @router.post("/login")
 async def login_user(
     payload: LoginRequest,
@@ -617,6 +1028,14 @@ async def login_user(
         raise HTTPException(
             status_code=403,
             detail="This account is currently disabled.",
+        )
+
+    if not user.email_verified:
+        raise HTTPException(
+            status_code=403,
+            detail=(
+                "Please verify your email address before logging in."
+            ),
         )
 
     request.session.clear()

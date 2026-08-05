@@ -2,6 +2,9 @@ const authMessage = document.getElementById("auth-message");
 const registerForm = document.getElementById("register-form");
 const loginForm = document.getElementById("login-form");
 
+const resendVerificationButton =
+  document.getElementById("resend-verification");
+
 let turnstileWidgetId = null;
 
 window.onTurnstileLoad = async function () {
@@ -222,13 +225,25 @@ if (registerForm) {
       }
 
       showMessage(
-        "Account created. Redirecting to your account...",
+        data.message ||
+          "Your account was created. Please check your email to verify your account.",
         "success"
       );
       
-      window.setTimeout(() => {
-        window.location.replace("/account");
-      }, 600);
+      registerForm.reset();
+
+      registerForm
+        .querySelectorAll("input, select, button")
+        .forEach((element) => {
+          element.disabled = true;
+        });
+      
+      if (
+        window.turnstile &&
+        turnstileWidgetId !== null
+      ) {
+        window.turnstile.reset(turnstileWidgetId);
+      }
     } catch (error) {
       console.error("Registration failed:", error);
 
@@ -247,6 +262,9 @@ if (loginForm) {
     event.preventDefault();
     showMessage("");
 
+    if (resendVerificationButton) {
+      resendVerificationButton.hidden = true;
+    }
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
 
@@ -285,15 +303,29 @@ if (loginForm) {
       const data = await getResponseData(response);
 
       if (!response.ok) {
+        const requiresVerification =
+          response.status === 403 &&
+          typeof data.detail === "string" &&
+          data.detail.toLowerCase().includes(
+            "verify your email"
+          );
+      
+        if (resendVerificationButton) {
+          resendVerificationButton.hidden =
+            !requiresVerification;
+        }
+      
         if (
           window.turnstile &&
           turnstileWidgetId !== null
         ) {
           window.turnstile.reset(turnstileWidgetId);
         }
+      
         showMessage(
           data.detail || "Unable to log in."
         );
+      
         return;
       }
 
@@ -323,6 +355,102 @@ if (loginForm) {
       setFormLoading(loginForm, false);
     }
   });
+}
+
+if (resendVerificationButton) {
+  resendVerificationButton.addEventListener(
+    "click",
+    async () => {
+      showMessage("");
+
+      const emailInput =
+        document.getElementById("email");
+
+      const email =
+        emailInput?.value.trim() || "";
+
+      if (!email) {
+        showMessage(
+          "Enter your email address first."
+        );
+        return;
+      }
+
+      const turnstile_token =
+        getTurnstileToken();
+
+      if (!turnstile_token) {
+        showMessage(
+          "Please complete the security check again."
+        );
+        return;
+      }
+
+      resendVerificationButton.disabled = true;
+      resendVerificationButton.textContent =
+        "Sending...";
+
+      try {
+        const response = await fetch(
+          "/api/auth/resend-verification",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            credentials: "same-origin",
+            cache: "no-store",
+            body: JSON.stringify({
+              email,
+              turnstile_token,
+            }),
+          }
+        );
+
+        const data =
+          await getResponseData(response);
+
+        if (!response.ok) {
+          showMessage(
+            data.detail ||
+              "Unable to resend the verification email."
+          );
+          return;
+        }
+
+        showMessage(
+          data.message ||
+            "If an unverified account exists, a new verification email has been sent.",
+          "success"
+        );
+
+        resendVerificationButton.hidden = true;
+      } catch (error) {
+        console.error(
+          "Verification resend failed:",
+          error
+        );
+
+        showMessage(
+          "Unable to connect to the server. Please try again."
+        );
+      } finally {
+        resendVerificationButton.disabled = false;
+        resendVerificationButton.textContent =
+          "Resend verification email";
+
+        if (
+          window.turnstile &&
+          turnstileWidgetId !== null
+        ) {
+          window.turnstile.reset(
+            turnstileWidgetId
+          );
+        }
+      }
+    }
+  );
 }
 
 const forgotPasswordForm =
