@@ -44,6 +44,46 @@ class PasswordResetToken(Base):
 
     user = relationship("User")
 
+class EmailVerificationToken(Base):
+    __tablename__ = "email_verification_tokens"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+    )
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    token_hash = Column(
+        String(64),
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
+    expires_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+
+    used_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    user = relationship("User")
+    
 class User(Base):
     __tablename__ = "users"
 
@@ -76,6 +116,13 @@ class User(Base):
         Boolean,
         default=True,
         nullable=False,
+    )
+
+    email_verified = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
     )
 
     created_at = Column(
