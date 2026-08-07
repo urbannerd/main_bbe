@@ -6,21 +6,32 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Create Account | Bag Builders Exchange</title>
 <link href="/assets/favicon.ico" rel="icon"/>
-<link href="/assets/styles.css" rel="stylesheet"/>
-<link href="/static/auth.css" rel="stylesheet"/>
-<script defer="" src="/static/js/auth.js"></script>
+<link href="/assets/styles.css?v=11" rel="stylesheet"/>
+<link href="/static/auth.css?v=11" rel="stylesheet"/>
+<script defer="" src="/static/js/auth.js?v=11"></script>
 <script
     defer
     src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit">
 </script>
-<link href="/static/site-nav.css?v=1" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=1"></script></head>
+<link href="/static/site-nav.css?v=11" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=11"></script></head>
 <body>
 <header class="account-header">
 <div class="account-header-inner">
-<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
-<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
-</a>
-<nav aria-label="Primary navigation" class="account-nav-links">
+  <a href="/" class="account-brand" aria-label="Bag Builders Exchange home">
+    <img src="/assets/logo.png" alt="Bag Builders Exchange" class="account-logo">
+  </a>
+  <button
+  class="account-mobile-toggle"
+  type="button"
+  aria-label="Open menu"
+  aria-expanded="false"
+  aria-controls="site-navigation"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+<nav id="site-navigation" class="account-nav-links" aria-label="Primary navigation">
 <a class="" data-nav-auth="guest" href="/">Home</a>
 <a class="" data-nav-auth="member" hidden="" href="/account">Dashboard</a>
 <div class="account-nav-dropdown">
