@@ -78,5 +78,40 @@
     if (event.key === 'Escape') closeAllDropdowns();
   });
 
+  const header = document.querySelector('.account-header');
+  const mobileToggle = document.querySelector('.account-mobile-toggle');
+
+  function closeMobileMenu() {
+    if (!header || !mobileToggle) return;
+
+    header.classList.remove('mobile-open');
+    mobileToggle.classList.remove('is-open');
+    mobileToggle.setAttribute('aria-expanded', 'false');
+
+    closeAllDropdowns();
+  }
+
+  if (header && mobileToggle) {
+    mobileToggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const willOpen = !header.classList.contains('mobile-open');
+
+      header.classList.toggle('mobile-open', willOpen);
+      mobileToggle.classList.toggle('is-open', willOpen);
+      mobileToggle.setAttribute('aria-expanded', String(willOpen));
+
+      if (!willOpen) {
+        closeAllDropdowns();
+      }
+    });
+
+    document
+      .querySelectorAll('.account-nav-links > a')
+      .forEach((link) => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+  }
   loadAuthState();
 })();

@@ -12,27 +12,25 @@
 <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon"/>
 <link href="/assets/styles.css" rel="stylesheet">
 <link href="/static/auth.css?v=3" rel="stylesheet"/>
-<style>
-    .page-shell{max-width:900px;margin:0 auto;padding:42px 22px 64px}
-    .page-card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:0 12px 50px rgba(0,0,0,.45);padding:28px}
-    .page-kicker{color:var(--gold2);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;margin:0 0 10px}
-    .page-title{margin:0 0 10px;font-size:clamp(32px, 5vw, 48px);line-height:1.02;letter-spacing:-.04em}
-    .page-subtitle{margin:0 0 26px;color:var(--muted);font-size:16px;line-height:1.6;max-width:65ch}
-    .page-section{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.06)}
-    .page-section:first-of-type{margin-top:0;padding-top:0;border-top:0}
-    .page-section h2{margin:0 0 10px;font-size:22px;letter-spacing:-.02em}
-    .page-section p{margin:0 0 14px;color:var(--muted);font-size:15px;line-height:1.7}
-    .page-meta{margin-top:26px;color:var(--muted2);font-size:13px}
-  </style>
-
 <link href="/static/site-nav.css?v=2" rel="stylesheet"/><script defer="True" src="/static/js/site-nav.js?v=2"></script></head>
 <body>
 <header class="account-header">
 <div class="account-header-inner">
-<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
-<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
-</a>
-<nav aria-label="Primary navigation" class="account-nav-links">
+  <a href="/" class="account-brand" aria-label="Bag Builders Exchange home">
+    <img src="/assets/logo.png" alt="Bag Builders Exchange" class="account-logo">
+  </a>
+  <button
+  class="account-mobile-toggle"
+  type="button"
+  aria-label="Open menu"
+  aria-expanded="false"
+  aria-controls="site-navigation"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+<nav id="site-navigation" class="account-nav-links" aria-label="Primary navigation">
 <a data-nav-auth="guest" href="/">Home</a>
 <a data-nav-auth="member" hidden="" href="/account">Dashboard</a>
 <div class="account-nav-dropdown">
