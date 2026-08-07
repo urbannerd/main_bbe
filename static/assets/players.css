@@ -571,7 +571,7 @@ body:has(.account-header) .site-nav {
   }
 
   video {
-    max-height: calc(100svh - var(--member-nav-height) - 72px);
+    max-height: calc(100svh - var(--player-nav-offset) - 72px);
     border-radius: 8px;
   }
 
@@ -694,3 +694,123 @@ body:has(.account-header) .site-nav {
       min-height: calc(100svh - var(--player-nav-offset, 90px));
     }
   }
+
+/* ==========================================================
+   MOBILE PAGE FINISH
+   Reduce empty black space below the live player while
+   preserving the full uncropped chart and universal nav.
+   ========================================================== */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    height: auto;
+    min-height: 100svh;
+    background:
+      radial-gradient(
+        700px 420px at 50% 0%,
+        rgba(214, 162, 26, 0.08),
+        transparent 60%
+      ),
+      #070708;
+  }
+
+  .app-shell {
+    min-height: 0;
+    background: transparent;
+  }
+
+  body[data-stream] .page {
+    min-height: 0;
+    padding-bottom: 18px;
+  }
+
+  .player-wrap,
+  body[data-stream] .player-wrap {
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+  }
+
+  .bottom-bar {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  body[data-stream] .page {
+    padding: 8px 8px 14px;
+  }
+
+  .player-wrap,
+  body[data-stream] .player-wrap {
+    border-radius: 10px;
+  }
+
+  .top-bar {
+    padding: 7px 3px 2px;
+  }
+
+  .bottom-bar {
+    margin-top: 8px;
+  }
+
+  .donate {
+    min-height: 42px;
+    padding: 10px 14px;
+  }
+}
+
+/* ==========================================================
+   MOBILE / TABLET VERTICAL CENTERING
+   Centers the stream content in the available viewport below
+   the universal navbar, similar to desktop presentation.
+   ========================================================== */
+
+@media (max-width: 860px) {
+  .app-shell {
+    min-height: calc(100svh - var(--player-nav-offset, 72px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body[data-stream] .page {
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    min-height: calc(100svh - var(--player-nav-offset, 72px));
+  }
+
+  body[data-stream] .page {
+    width: 100%;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-shell {
+    min-height: calc(100svh - var(--player-nav-offset, 68px));
+  }
+
+  body[data-stream] .page {
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+}
+
+/* Short landscape phones: avoid forcing vertical centering
+   when there is not enough vertical room. */
+@media (max-width: 860px) and (max-height: 560px) {
+  .app-shell {
+    min-height: 0;
+    align-items: flex-start;
+  }
+}
