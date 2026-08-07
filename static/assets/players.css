@@ -1,5 +1,5 @@
 :root {
-  --member-nav-height: 90px;
+  --player-nav-offset: 90px;
 }
 
 html, body {
@@ -27,7 +27,7 @@ video {
 
  .market-closed {
   position: fixed;
-  inset: var(--member-nav-height) 0 0;
+  inset: var(--player-nav-offset) 0 0;
   display: none;
   align-items: center;
   justify-content: center;
@@ -386,3 +386,311 @@ body[data-stream] .player-wrap {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ==========================================================
+   MOBILE HARDENING — PLAYER / STREAM PAGES
+   Keeps desktop unchanged; targets tablets + phones.
+   Universal .account-header navigation remains owned by
+   site-nav.css and is intentionally not restyled here.
+   ========================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+/* Prevent long labels / status text from forcing horizontal overflow. */
+.badge,
+.live,
+.disclaimer,
+.closed-brand,
+.closed-tagline {
+  overflow-wrap: anywhere;
+}
+
+/* Legacy nav should never create a second sticky navigation layer
+   when the universal account header is present. */
+body:has(.account-header) .site-nav {
+  position: static;
+  z-index: auto;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .page,
+  body[data-stream] .page {
+    width: 100%;
+    max-width: none;
+    padding: 14px 12px 20px;
+  }
+
+  .player-wrap,
+  body[data-stream] .player-wrap {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  video {
+    width: 100%;
+    height: auto;
+    max-height: calc(100svh - var(--player-nav-offset) - 96px);
+    border-radius: 10px;
+    object-fit: contain;
+  }
+
+  h1,
+  .hero h1,
+  body .wrap > .hero h1 {
+    font-size: clamp(24px, 8vw, 32px);
+    line-height: 1.08;
+  }
+
+  .top-bar {
+    width: 100%;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .badge,
+  .live,
+  .disclaimer {
+    max-width: 100%;
+  }
+
+  .badge {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .live {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .disclaimer {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .bottom-bar {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .donate {
+    min-height: 44px;
+    padding: 11px 16px;
+  }
+
+  .market-closed {
+    inset: var(--player-nav-offset) 0 0;
+    padding: 84px 18px 24px;
+  }
+
+  .closed-topbar {
+    height: 58px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .closed-brand {
+    font-size: 18px;
+  }
+
+  .closed-tagline {
+    font-size: 13px;
+  }
+
+  .market-closed h1 {
+    font-size: 28px;
+  }
+
+  .market-closed p {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 34rem;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* The legacy navigation in this stylesheet is desktop-oriented.
+     If it exists on a page without the universal nav, keep it usable
+     rather than allowing wide horizontal spacing. */
+  .site-nav-wrap {
+    padding: 10px 12px;
+  }
+
+  .site-nav-links {
+    width: 100%;
+    margin-left: 0;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .site-nav-links > a,
+  .nav-dropdown > a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 9px;
+  }
+
+  .dropdown-menu {
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* Phones */
+@media (max-width: 520px) {
+
+  .page,
+  body[data-stream] .page {
+    padding: 10px 8px 16px;
+  }
+
+  video {
+    max-height: calc(100svh - var(--member-nav-height) - 72px);
+    border-radius: 8px;
+  }
+
+  .top-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .disclaimer {
+    grid-column: 1 / -1;
+  }
+
+  .badge {
+    min-width: 0;
+  }
+
+  .live {
+    justify-self: end;
+    white-space: nowrap;
+  }
+
+  .bottom-bar {
+    justify-content: stretch;
+  }
+
+  .donate {
+    width: 100%;
+    text-align: center;
+  }
+
+  .market-closed {
+    padding: 72px 14px 18px;
+  }
+
+  .closed-topbar {
+    height: 52px;
+  }
+
+  .closed-brand {
+    font-size: 16px;
+  }
+
+  .closed-tagline {
+    display: none;
+  }
+
+  .market-closed h1 {
+    font-size: 24px;
+  }
+
+  .market-closed p {
+    font-size: 13px;
+  }
+
+  .site-logo-img {
+    height: 38px;
+  }
+
+  .site-nav-links {
+    justify-content: flex-start;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 390px) {
+  .page,
+  body[data-stream] .page {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .badge {
+    font-size: 12px;
+  }
+
+  .live {
+    font-size: 10px;
+  }
+
+  .disclaimer {
+    font-size: 10.5px;
+  }
+
+  .market-closed {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  :root {
+    --player-nav-offset: 72px;
+  }
+
+  video {
+    max-height: calc(100svh - var(--player-nav-offset) - 96px);
+  }
+
+  .market-closed {
+    inset: var(--player-nav-offset) 0 0;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --player-nav-offset: 68px;
+  }
+
+  video {
+    max-height: calc(100svh - var(--player-nav-offset) - 72px);
+  }
+}
+
+/* Mobile browser UI can change viewport height while scrolling.
+   svh avoids the common address-bar clipping problem. */
+   @supports (height: 100svh) {
+    .market-closed {
+      min-height: calc(100svh - var(--player-nav-offset, 90px));
+    }
+  }
