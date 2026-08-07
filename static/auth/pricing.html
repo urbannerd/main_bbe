@@ -15,10 +15,21 @@
 <body class="pricing-page">
 <header class="account-header">
 <div class="account-header-inner">
-<a aria-label="Bag Builders Exchange home" class="account-brand" href="/">
-<img alt="Bag Builders Exchange" class="account-logo" src="/assets/logo.png"/>
-</a>
-<nav aria-label="Primary navigation" class="account-nav-links">
+  <a href="/" class="account-brand" aria-label="Bag Builders Exchange home">
+    <img src="/assets/logo.png" alt="Bag Builders Exchange" class="account-logo">
+  </a>
+  <button
+  class="account-mobile-toggle"
+  type="button"
+  aria-label="Open menu"
+  aria-expanded="false"
+  aria-controls="site-navigation"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+<nav id="site-navigation" class="account-nav-links" aria-label="Primary navigation">
 <a class="" data-nav-auth="guest" href="/">Home</a>
 <a class="" data-nav-auth="member" hidden="" href="/account">Dashboard</a>
 <div class="account-nav-dropdown">
