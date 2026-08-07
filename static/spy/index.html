@@ -42,91 +42,24 @@
   <!-- Shared site styles -->
   <link
     rel="stylesheet"
+    href="https://bagbuildersexchange.com/assets/styles.css?v=1"
+  >
+
+  <link
+    rel="stylesheet"
     href="https://bagbuildersexchange.com/static/auth.css?v=3"
   >
 
   <link
     rel="stylesheet"
-    href="https://bagbuildersexchange.com/static/site-nav.css?v=2"
+    href="https://bagbuildersexchange.com/static/site-nav.css?v=13"
   >
-  <link
-  rel="stylesheet"
-  href="https://bagbuildersexchange.com/assets/styles.css?v=1"
-  >
+
   <!-- Player styles loaded last -->
   <link
     rel="stylesheet"
-    href="/assets/players.css?v=20260728-2"
+    href="/assets/players.css?v=20260807-2"
   >
-
-  <script
-  defer
-  src="https://bagbuildersexchange.com/static/js/site-nav.js?v=12"
-></script>
-
-  <style id="live-member-nav-fix">
-    .account-header-inner {
-      width: min(100% - 32px, 1440px) !important;
-      gap: 24px !important;
-    }
-
-    .account-brand {
-      flex: 0 0 auto;
-    }
-
-    .account-logo {
-      width: 132px !important;
-      max-height: 82px !important;
-      object-fit: contain;
-    }
-
-    .account-nav-links {
-      flex: 1 1 auto;
-      min-width: 0;
-      justify-content: center;
-      gap: 6px !important;
-    }
-
-    .account-nav-links > a,
-    .account-nav-trigger {
-      min-height: 42px !important;
-      padding: 9px 10px !important;
-      white-space: nowrap;
-    }
-
-    .account-header-actions {
-      flex: 0 0 auto;
-      margin-left: 0 !important;
-    }
-
-    .account-menu-trigger {
-      min-height: 42px !important;
-      padding: 9px 12px !important;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 1100px) {
-      .account-header-inner {
-        gap: 12px !important;
-      }
-
-      .account-logo {
-        width: 108px !important;
-      }
-
-      .account-nav-links {
-        gap: 2px !important;
-      }
-
-      .account-nav-links > a,
-      .account-nav-trigger,
-      .account-menu-trigger {
-        padding-left: 7px !important;
-        padding-right: 7px !important;
-        font-size: 0.9rem !important;
-      }
-    }
-  </style>
 </head>
 
 <body data-stream="spy">
@@ -148,9 +81,9 @@
 
       <!-- MOBILE BURGER -->
         <button
-        class="site-nav-toggle"
+        class="account-mobile-toggle"
         type="button"
-        aria-label="Open navigation"
+        aria-label="Open menu"
         aria-expanded="false"
         aria-controls="site-navigation"
       >
@@ -229,7 +162,7 @@
             type="button"
             aria-expanded="false"
           >
-            <span class="account-menu-email">
+            <span class="account-menu-email" data-nav-user-name>
               Account
             </span>
 
@@ -326,10 +259,11 @@
 
   <script src="/js/market.js?v=20260405-2"></script>
   <script src="/js/autoplay.js"></script>
+
   <script
-  defer
-  src="https://bagbuildersexchange.com/static/js/site-nav.js?v=12"
-></script>
+    defer
+    src="https://bagbuildersexchange.com/static/js/site-nav.js?v=14"
+  ></script>
 
 </body>
 </html>

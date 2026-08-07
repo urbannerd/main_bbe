@@ -1,14 +1,22 @@
 (() => {
   const guestItems = document.querySelectorAll('[data-nav-auth="guest"]');
   const memberItems = document.querySelectorAll('[data-nav-auth="member"]');
-  const emailLabels = document.querySelectorAll('[data-nav-user-email]');
+  const userLabels = document.querySelectorAll(
+    '[data-nav-user-name], [data-nav-user-email]'
+  );
 
   function setAuthenticated(user) {
     guestItems.forEach((item) => { item.hidden = true; });
     memberItems.forEach((item) => { item.hidden = false; });
 
-    emailLabels.forEach((label) => {
-      label.textContent = user?.email || "Account";
+    const displayName =
+      user?.username ||
+      user?.full_name ||
+      user?.email ||
+      "Account";
+
+    userLabels.forEach((label) => {
+      label.textContent = displayName;
     });
   }
 
