@@ -1,9 +1,7 @@
 (() => {
   const guestItems = document.querySelectorAll('[data-nav-auth="guest"]');
   const memberItems = document.querySelectorAll('[data-nav-auth="member"]');
-  const userLabels = document.querySelectorAll(
-    '[data-nav-user-name], [data-nav-user-email]'
-  );
+  const userLabels = document.querySelectorAll('[data-nav-user-name]');
 
   function setAuthenticated(user) {
     guestItems.forEach((item) => { item.hidden = true; });
@@ -11,8 +9,6 @@
 
     const displayName =
       user?.username ||
-      user?.full_name ||
-      user?.email ||
       "Account";
 
     userLabels.forEach((label) => {
